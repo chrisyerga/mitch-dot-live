@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from "astro:transitions";
+import { SiteLogo } from "../components/SiteLogo";
 import "../styles/global.css";
 
 interface Props {
@@ -43,7 +44,7 @@ const {
   <body>
     <header class="site-header sticky top-0 z-20 border-b border-[color:var(--border)] bg-[color:var(--bg)]/90 backdrop-blur">
       <div class="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
-        <a href="/" class="font-display text-lg font-bold tracking-tight">ismitchmcconnella.live</a>
+        <SiteLogo client:load transition:persist="site-logo" />
         <nav class="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.18em]">
           <a href="/#news" class="opacity-80 hover:opacity-100">News</a>
           <a href="/#bio" class="opacity-80 hover:opacity-100">Bio</a>

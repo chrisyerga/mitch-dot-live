@@ -145,7 +145,219 @@ body {
   filter: brightness(1.08);
 }
 
+.site-logo {
+  display: inline-block;
+  min-width: 26ch;
+  color: var(--text);
+  text-decoration: none;
+  transition: opacity 600ms ease;
+}
+
+.site-logo:hover {
+  color: var(--accent);
+}
+
+.site-logo-fading {
+  opacity: 0;
+}
+
+.site-logo-typed {
+  display: inline;
+  white-space: nowrap;
+  text-transform: lowercase;
+  letter-spacing: 0.00em;
+}
+
+.site-logo-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 0.95em;
+  margin-left: 2px;
+  background: currentColor;
+  vertical-align: -0.08em;
+  animation: site-logo-blink 1s step-end infinite;
+}
+
+@keyframes site-logo-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.site-logo-track {
+  --live-anchor: 0px;
+  --q-anchor: 0px;
+  --wide-gap: 0.72em;
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  text-transform: lowercase;
+  min-height: 1.2em;
+}
+
+.site-logo-prefix {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+}
+
+.site-logo-seg,
+.site-logo-alive,
+.site-logo-a,
+.site-logo-q,
+.site-logo-dot,
+.site-logo-live {
+  display: inline-block;
+}
+
+.site-logo-gap {
+  display: inline-block;
+  width: 0;
+  flex-shrink: 0;
+  transition: width 700ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site-logo-spaced .site-logo-gap {
+  width: var(--wide-gap);
+}
+
+.site-logo-alive {
+  transition: opacity 350ms ease;
+}
+
+.site-logo-a {
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    width 700ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 350ms ease;
+}
+
+.site-logo-q-slot {
+  display: inline-block;
+  width: 1ch;
+  flex-shrink: 0;
+}
+
+.site-logo-q {
+  display: inline-block;
+  width: 1ch;
+  text-align: center;
+  opacity: 1;
+}
+
+.site-logo-q-pinned .site-logo-q {
+  position: absolute;
+  top: 0;
+  left: var(--q-anchor);
+}
+
+.site-logo-fade-q-active .site-logo-q {
+  transition: opacity 200ms ease;
+  opacity: 0;
+}
+
+.site-logo-q-hidden .site-logo-q {
+  opacity: 0;
+}
+
+.site-logo-tail {
+  position: absolute;
+  top: 0;
+  left: var(--live-anchor);
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: left 650ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site-logo-split-a .site-logo-tail {
+  opacity: 1;
+}
+
+.site-logo-live {
+  display: inline-block;
+}
+
+.site-logo-dot {
+  display: inline-block;
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(2.6);
+  transform-origin: center bottom;
+  line-height: 1;
+}
+
+/* Squish: collapse wide gaps into one word */
+.site-logo-squished .site-logo-gap {
+  width: 0;
+}
+
+/* Split: peel "live" off, keep it anchored; reveal trailing "a" */
+.site-logo-split-a .site-logo-alive {
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.site-logo-split-a .site-logo-a {
+  width: 1ch;
+  opacity: 1;
+}
+
+/* Dot pops in large, then settles */
+.site-logo-show-dot .site-logo-dot {
+  width: 1ch;
+  animation: site-logo-dot-pop 550ms cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+}
+
+@keyframes site-logo-dot-pop {
+  0% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(2.6);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Dot + live slide left into final domain form */
+.site-logo-slide .site-logo-tail,
+.site-logo-compact .site-logo-tail {
+  left: calc(var(--live-anchor) - 1.05ch);
+}
+
+@media (max-width: 640px) {
+  .site-logo {
+    min-width: 20ch;
+    font-size: 0.82rem;
+  }
+
+  .site-logo-track {
+    --wide-gap: 0.55em;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .site-logo-cursor {
+    animation: none;
+  }
+
   .scroll-reveal {
     opacity: 1;
     transform: none;
