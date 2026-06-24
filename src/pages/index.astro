@@ -1,0 +1,48 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { HomeApp } from "../components/HomeApp";
+import { ScrollReveal } from "../components/ScrollReveal";
+---
+
+<BaseLayout>
+  <HomeApp client:load transition:persist="home-app" />
+
+  <ScrollReveal client:visible>
+    <section id="bio" class="section-shell mx-auto w-full max-w-4xl px-6 py-20">
+      <p class="section-eyebrow font-mono text-xs uppercase tracking-[0.3em]">Biography</p>
+      <h2 class="section-title mt-3 font-display text-4xl md:text-5xl">
+        Addison Mitchell McConnell III
+      </h2>
+      <div class="bio-card mt-8 space-y-5 rounded-2xl p-8 text-lg leading-relaxed opacity-90">
+        <p>
+          Mitch McConnell is the senior United States senator from Kentucky, first elected in
+          1984. He served as Senate majority leader for multiple terms and became the
+          longest-serving Senate party leader in American history.
+        </p>
+        <p>
+          Born in Alabama and raised in Louisville, McConnell earned his law degree from the
+          University of Kentucky. Before the Senate, he worked as a judge-executive in Jefferson
+          County and as a deputy assistant attorney general.
+        </p>
+        <p>
+          His career has been defined by institutional strategy, judicial confirmations, and a
+          reputation for procedural mastery. Whether you admire the tactics or not, he's been
+          one of the most durable figures in modern American politics.
+        </p>
+      </div>
+    </section>
+  </ScrollReveal>
+
+  <ScrollReveal client:visible>
+    <section id="editorial" class="section-shell mx-auto w-full max-w-4xl px-6 py-20">
+      <p class="section-eyebrow font-mono text-xs uppercase tracking-[0.3em]">Editorial</p>
+      <h2 class="section-title mt-3 font-display text-4xl md:text-5xl">Coming soon</h2>
+      <div class="editorial-card mt-8 rounded-2xl p-8">
+        <p class="text-lg leading-relaxed opacity-85">
+          Short essays, context, and occasional commentary will live here. For now, the giant
+          YES/NO up top is doing the heavy lifting.
+        </p>
+      </div>
+    </section>
+  </ScrollReveal>
+</BaseLayout>

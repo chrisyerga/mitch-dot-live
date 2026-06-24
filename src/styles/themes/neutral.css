@@ -1,0 +1,44 @@
+:root,
+[data-theme="neutral"] {
+  --bg: #f7f5f0;
+  --surface: #ffffff;
+  --text: #1b2a41;
+  --text-muted: #4a5568;
+  --accent: #a63d40;
+  --accent-secondary: #4a6fa5;
+  --accent-text: #ffffff;
+  --border: rgba(27, 42, 65, 0.12);
+  --status-color: #1b2a41;
+  --font-display: "Libre Baskerville", Georgia, serif;
+}
+
+[data-theme="neutral"] body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(180deg, rgba(74, 111, 165, 0.04), transparent 240px),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 39px,
+      rgba(166, 61, 64, 0.035) 39px,
+      rgba(166, 61, 64, 0.035) 40px
+    );
+}
+
+[data-theme="neutral"] .hero-section::before {
+  content: "★";
+  position: absolute;
+  top: 2rem;
+  right: 8%;
+  font-size: 5rem;
+  opacity: 0.05;
+  color: var(--accent-secondary);
+}
+
+[data-theme="neutral"] .hero-status-yes {
+  color: #1b2a41;
+}
+
+[data-theme="neutral"] .hero-status-no {
+  color: #a63d40;
+}

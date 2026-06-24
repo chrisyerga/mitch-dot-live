@@ -1,0 +1,11 @@
+services:
+  web:
+    image: ${WEB_IMAGE:-ghcr.io/chrisyerga/mitch-dot-live:latest}
+    container_name: mitch-web
+    restart: unless-stopped
+    networks:
+      - porch
+
+networks:
+  porch:
+    external: true

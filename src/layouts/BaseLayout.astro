@@ -1,0 +1,77 @@
+---
+import { ClientRouter } from "astro:transitions";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Is Mitch McConnell still alive?",
+  description = "Unofficial live status check for Senator Mitch McConnell (Kentucky).",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="neutral">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=IM+Fell+English+SC&family=Libre+Baskerville:wght@700&family=Source+Sans+3:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+    <ClientRouter />
+    <script is:inline>
+      (function () {
+        var pref = localStorage.getItem("themePreference");
+        var alive = true;
+        var theme = "neutral";
+        if (pref === "happyNow") theme = alive ? "happy" : "sad";
+        else if (pref === "happyLater") theme = alive ? "sad" : "happy";
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="site-header sticky top-0 z-20 border-b border-[color:var(--border)] bg-[color:var(--bg)]/90 backdrop-blur">
+      <div class="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
+        <a href="/" class="font-display text-lg font-bold tracking-tight">ismitchmcconnella.live</a>
+        <nav class="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.18em]">
+          <a href="/#news" class="opacity-80 hover:opacity-100">News</a>
+          <a href="/#bio" class="opacity-80 hover:opacity-100">Bio</a>
+          <a href="/admin" class="opacity-80 hover:opacity-100">Admin</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer px-6 py-12">
+      <div class="mx-auto w-full max-w-4xl space-y-4 text-sm leading-relaxed opacity-85">
+        <p>
+          <strong>Disclaimer:</strong> This is an unofficial parody site. It is not medical
+          information, not affiliated with the U.S. Senate, and not an authoritative source
+          about anyone's health.
+        </p>
+        <p>
+          Official resources:
+          <a href="https://www.mcconnell.senate.gov/public/" target="_blank" rel="noopener noreferrer">
+            Senate office
+          </a>
+          ·
+          <a href="https://en.wikipedia.org/wiki/Mitch_McConnell" target="_blank" rel="noopener noreferrer">
+            Wikipedia
+          </a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
