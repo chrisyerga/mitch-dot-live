@@ -1,59 +1,65 @@
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { ScrollReveal } from "./ScrollReveal";
 
-function formatDate(timestamp: number): string {
-  return new Intl.DateTimeFormat("en-US", {
-    dateStyle: "medium",
-    timeZone: "America/New_York",
-  }).format(new Date(timestamp));
+function relativeWhen(timestamp: number): string {
+  const diffMs = Date.now() - timestamp;
+  const hours = Math.floor(diffMs / 3600000);
+  if (hours < 24) return `${Math.max(1, hours)}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
 }
 
 export function NewsSection() {
   const news = useQuery(api.news.listPublished);
 
   return (
-    <ScrollReveal>
-      <section id="news" className="section-shell mx-auto w-full max-w-4xl px-6 py-20">
-        <p className="section-eyebrow font-mono text-xs uppercase tracking-[0.3em]">
-          Recent headlines
-        </p>
-        <h2 className="section-title mt-3 font-display text-4xl md:text-5xl">
-          In the news
-        </h2>
-        <p className="section-lead mt-4 max-w-2xl text-lg opacity-85">
-          Curated links about Senator McConnell. Not an exhaustive feed — just
-          enough context while you scroll.
-        </p>
+    <section id="news" className="mx-auto max-w-[1180px] px-6 py-11">
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <h2 className="section-heading m-0">In the news</h2>
+        <span className="text-[13px] text-[color:var(--muted)]">
+          Curated links · updated from the admin panel
+        </span>
+      </div>
 
-        {news === undefined ? (
-          <p className="mt-10 font-mono text-sm opacity-70">Loading news…</p>
-        ) : news.length === 0 ? (
-          <p className="mt-10 font-mono text-sm opacity-70">No news items yet.</p>
-        ) : (
-          <ul className="news-list mt-10 space-y-4">
-            {news.map((item) => (
-              <li key={item._id} className="news-card rounded-2xl p-5 transition hover:-translate-y-0.5">
-                <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.18em] opacity-70">
-                  <span>{item.source}</span>
-                  <span aria-hidden="true">·</span>
-                  <time dateTime={new Date(item.publishedAt).toISOString()}>
-                    {formatDate(item.publishedAt)}
-                  </time>
+      {news === undefined ? (
+        <p className="text-sm text-[color:var(--muted)]">Loading news…</p>
+      ) : news.length === 0 ? (
+        <p className="text-sm text-[color:var(--muted)]">No news items yet.</p>
+      ) : (
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(248px,1fr))] gap-[18px]">
+          {news.map((item) => (
+            <a
+              key={item._id}
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="news-card reveal-up group flex flex-col overflow-hidden no-underline"
+            >
+              <div className="news-card-photo flex h-[138px] items-center justify-center border-b border-[color:var(--line)]">
+                <span className="rounded bg-[color:var(--surface)] px-2 py-1 font-mono text-[11px] tracking-[0.12em] text-[color:var(--muted)]">
+                  PHOTO
+                </span>
+              </div>
+              <div className="flex flex-1 flex-col gap-2 p-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-bold tracking-wide text-[color:var(--accent)] uppercase">
+                    {item.source}
+                  </span>
+                  <span className="text-[11px] text-[color:var(--muted)]">
+                    · {relativeWhen(item.publishedAt)}
+                  </span>
                 </div>
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="news-link mt-2 block text-xl font-semibold leading-snug md:text-2xl"
-                >
+                <p className="m-0 text-[15px] leading-snug font-semibold text-[color:var(--fg)] group-hover:text-[color:var(--accent2)]">
                   {item.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-    </ScrollReveal>
+                </p>
+                <span className="mt-auto text-[13px] font-semibold text-[color:var(--accent2)]">
+                  Read →
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }

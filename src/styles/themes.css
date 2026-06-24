@@ -1,0 +1,87 @@
+/* Theme tokens matching the mockup */
+
+:root,
+[data-site-theme="default"] {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --fg: #0d1b2a;
+  --muted: #566072;
+  --accent: #b31942;
+  --accent2: #0a3161;
+  --line: #e4e7ec;
+  --radius: 6px;
+  --font-display: "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Helvetica Neue", Arial, sans-serif;
+  --hero-anim: heartbeat 1.7s ease-in-out infinite;
+  --shadow: 0 1px 3px rgba(13, 27, 42, 0.07), 0 10px 30px rgba(13, 27, 42, 0.05);
+  --answer-bg: none;
+  --answer-color: #0a3161;
+  --answer-shadow: none;
+}
+
+[data-site-theme="celebration"] {
+  --bg: #aee9ff;
+  --surface: #ffffff;
+  --fg: #4a3410;
+  --muted: #8a6f3a;
+  --accent: #ff5da2;
+  --accent2: #ff9a00;
+  --line: #ffe6a8;
+  --radius: 26px;
+  --font-display: "Fredoka", sans-serif;
+  --font-body: "Fredoka", sans-serif;
+  --hero-anim: wiggle 1.3s ease-in-out infinite, rainbowMove 5s linear infinite;
+  --shadow: 0 10px 0 rgba(255, 154, 0, 0.13), 0 14px 34px rgba(255, 93, 162, 0.18);
+  --answer-bg: linear-gradient(
+    90deg,
+    #ff4d4d,
+    #ff9a3d,
+    #ffe14d,
+    #5ad06a,
+    #4db4ff,
+    #9b6bff,
+    #ff4d4d
+  );
+  --answer-color: transparent;
+  --answer-shadow: none;
+}
+
+[data-site-theme="memorial"] {
+  --bg: #23272d;
+  --surface: #181b21;
+  --fg: #c8ccd3;
+  --muted: #7e848d;
+  --accent: #6f8eae;
+  --accent2: #9aa3af;
+  --line: #2b2f36;
+  --radius: 6px;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: Georgia, "Times New Roman", serif;
+  --hero-anim: none;
+  --shadow: 0 14px 44px rgba(0, 0, 0, 0.5);
+  --answer-bg: none;
+  --answer-color: #b6bcc4;
+  --answer-shadow: 0 0 32px rgba(120, 145, 175, 0.4);
+}
+
+[data-site-theme="celebration"] .site-root {
+  background: linear-gradient(180deg, #aee9ff 0%, #fff4c2 50%, #cdf3a3 100%) fixed;
+}
+
+[data-site-theme="memorial"] .site-root {
+  background: linear-gradient(180deg, #3a4049 0%, #23272d 52%, #0d0f12 100%) fixed;
+}
+
+[data-site-theme="default"] .site-root {
+  background: var(--bg);
+}
+
+[data-site-theme="celebration"] .hero-answer-yes,
+[data-site-theme="celebration"] .hero-answer-no {
+  animation: wiggle 1.3s ease-in-out infinite, rainbowMove 5s linear infinite;
+}
+
+[data-site-theme="memorial"] .hero-answer-no {
+  color: #b6bcc4;
+  text-shadow: 0 0 32px rgba(120, 145, 175, 0.4);
+}

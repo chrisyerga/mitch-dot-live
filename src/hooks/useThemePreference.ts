@@ -1,33 +1,27 @@
 import { useEffect, useState } from "react";
 import {
-  THEME_PREFERENCE_KEY,
-  type ThemePreference,
+  readStoredPreference,
   resolveTheme,
-} from "../lib/theme";
+  storePreference,
+  type ThemePreference,
+  type SiteTheme,
+} from "../lib/themes";
 
 export function useThemePreference(isAlive: boolean) {
   const [preference, setPreferenceState] = useState<ThemePreference>("neutral");
+  const visualTheme: SiteTheme = resolveTheme(preference, isAlive);
 
   useEffect(() => {
-    const stored = localStorage.getItem(THEME_PREFERENCE_KEY);
-    if (
-      stored === "neutral" ||
-      stored === "happyNow" ||
-      stored === "happyLater"
-    ) {
-      setPreferenceState(stored);
-    }
+    setPreferenceState(readStoredPreference());
   }, []);
 
-  const visualTheme = resolveTheme(preference, isAlive);
-
   useEffect(() => {
-    document.documentElement.dataset.theme = visualTheme;
+    document.documentElement.dataset.siteTheme = visualTheme;
   }, [visualTheme]);
 
   const setPreference = (next: ThemePreference) => {
-    localStorage.setItem(THEME_PREFERENCE_KEY, next);
     setPreferenceState(next);
+    storePreference(next);
   };
 
   return { preference, setPreference, visualTheme };

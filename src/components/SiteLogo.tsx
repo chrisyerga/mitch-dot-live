@@ -19,8 +19,7 @@ type Phase =
   | "slide"
   | "domain-final"
   | "pause"
-  | "fadeout"
-  | "pause";
+  | "fadeout";
 
 const FULL_QUESTION = "is mitch mcconnell alive?";
 const TYPE_SPEED_MS = 55;
@@ -31,9 +30,9 @@ const TIMING = {
   squished: 400,
   splitA: 8,
   domain: 5,
-  fadeQ: 2,
-  dotIn: 550,
-  slide: 650,
+  fadeQ: 3,
+  dotIn: 500,
+  slide: 6,
   domainFinal: 1200,
   fadeout: 600,
 } as const;
@@ -127,9 +126,9 @@ export function SiteLogo() {
       { phase: "squished", duration: TIMING.squished },
       { phase: "split-a", duration: TIMING.splitA },
       { phase: "domain", duration: TIMING.domain },
-//      { phase: "fade-q", duration: TIMING.fadeQ },
+      { phase: "fade-q", duration: TIMING.fadeQ },
       { phase: "dot-in", duration: TIMING.dotIn },
- //     { phase: "slide", duration: TIMING.slide },
+      { phase: "slide", duration: TIMING.slide },
  //     { phase: "domain-final", duration: TIMING.domainFinal },
       { phase: "pause", duration: 5000 },
       { phase: "fadeout", duration: TIMING.fadeout },
@@ -277,7 +276,7 @@ export function SiteLogo() {
   return (
     <a
       href="/"
-      className={`site-logo font-mono text-lg font-bold tracking-tight ${fading ? "site-logo-fading" : ""}`}
+      className={`site-logo ${fading ? "site-logo-fading" : ""}`}
       aria-label="ismitchmcconnella.live — is mitch mcconnell alive?"
     >
       {showTyped ? (
