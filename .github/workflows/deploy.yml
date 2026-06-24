@@ -44,9 +44,9 @@ jobs:
 
       - uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.PORCH_HOST }}
-          username: ${{ secrets.PORCH_USER }}
-          key: ${{ secrets.PORCH_SSH_KEY }}
+          host: ${{ secrets.PORCH_HOST || secrets.DO_HOST }}
+          username: ${{ secrets.PORCH_USER || secrets.DO_USER }}
+          key: ${{ secrets.PORCH_SSH_KEY || secrets.DO_SSH_KEY }}
           script: |
             bash -lc '
               set -e
