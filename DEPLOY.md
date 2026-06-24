@@ -3,94 +3,91 @@
 ## Overview
 
 - **Frontend:** Static Astro 7 build served by Caddy inside the `mitch-web` Docker container (port 80).
-- **Backend:** Convex Cloud (status, news, admin auth).
-- **Edge:** Shared VPS Caddy reverse proxy on the `porch` Docker network.
+- **Backend:** Convex Cloud (`bright-eel-480` production deployment).
+- **Edge:** Porch-managed Caddy on **milo** (`milo.newtricks.ai`), `porch` Docker network.
 
-## Prerequisites
+See [PORCH.md](./PORCH.md) for service registration details.
 
-- Node.js ≥ 22.12.0
-- Convex project (`npx convex login` then `npx convex dev`)
-- DNS `A` record for `ismitchmcconnella.live` pointing at the VPS
-- Docker on the VPS with external network `porch`
+## Host state (milo)
+
+Porch is already bootstrapped on milo:
+
+- `porch-caddy` — edge TLS on ports 80/443
+- `porch` Docker network — shared by app containers
+- `/opt/porch/` — generated Caddyfile + edge compose
+- `/opt/<service>/` — per-app compose (e.g. `/opt/abbot`, `/opt/mitch`)
+
+Verify anytime:
+
+```bash
+ssh milo.newtricks.ai 'bash -lc "source ~/.nvm/nvm.sh && npx @lindale/porch host doctor"'
+```
 
 ## Convex setup
 
-1. Create/link a Convex project:
+Production deployment: `https://bright-eel-480.convex.cloud`
+
+1. Set `ADMIN_PASSWORD` in the [Convex dashboard](https://dashboard.convex.dev/t/chris-d0ae1/mitch-dot-live) (Production env vars).
+
+2. Deploy functions:
    ```bash
-   npx convex dev
+   npx convex deploy --yes
    ```
 
-2. Set production env vars in the Convex dashboard:
-   - `ADMIN_PASSWORD` — admin login password (required)
-
-3. Seed initial data (once per deployment):
+3. Seed once (production):
    ```bash
-   npx convex run init:seed
+   npx convex run init:seed --prod
    ```
 
-4. Deploy Convex functions:
-   ```bash
-   npx convex deploy
+4. Frontend build needs:
    ```
-
-5. Copy the production Convex URL for the frontend build:
-   - `PUBLIC_CONVEX_URL=https://YOUR-DEPLOYMENT.convex.cloud`
+   PUBLIC_CONVEX_URL=https://bright-eel-480.convex.cloud
+   ```
 
 ## Local development
 
 ```bash
 cp .env.example .env.local
-# Edit ADMIN_PASSWORD and PUBLIC_CONVEX_URL as needed
 npm install
 npx convex dev   # terminal 1
 npm run dev      # terminal 2
 ```
 
-Admin panel: http://localhost:4321/admin
-
-## Docker build (local)
-
-```bash
-docker build \
-  --build-arg PUBLIC_CONVEX_URL=https://YOUR-DEPLOYMENT.convex.cloud \
-  -t mitch-dot-live .
-```
-
-## VPS manual steps (one-time)
-
-1. Ensure the app directory exists:
-   ```bash
-   sudo mkdir -p /opt/mitch
-   ```
-
-2. Add a vhost to the edge Caddyfile (e.g. `/opt/edge/Caddyfile` or `/opt/porch/Caddyfile`):
-
-   ```caddyfile
-   ismitchmcconnella.live {
-       import common
-       reverse_proxy mitch-web:80
-   }
-
-   www.ismitchmcconnella.live {
-       redir https://ismitchmcconnella.live{uri} permanent
-   }
-   ```
-
-3. Reload Caddy:
-   ```bash
-   docker exec porch-caddy caddy reload --config /etc/caddy/Caddyfile
-   ```
-
 ## GitHub Actions secrets
 
 | Secret | Purpose |
 |---|---|
-| `PUBLIC_CONVEX_URL` | Convex client URL baked into Astro build |
-| `CONVEX_DEPLOY_KEY` | Deploy Convex functions from CI |
-| `DO_HOST` | VPS hostname or IP |
-| `DO_USER` | SSH user |
-| `DO_SSH_KEY` | Private SSH key for deploy |
+| `PORCH_HOST` | `milo.newtricks.ai` |
+| `PORCH_USER` | SSH user |
+| `PORCH_SSH_KEY` | SSH private key |
+| `PUBLIC_CONVEX_URL` | `https://bright-eel-480.convex.cloud` |
+| `CONVEX_DEPLOY_KEY` | Convex production deploy key |
+
+The host also needs `DIGITALOCEAN_TOKEN` in the SSH user's environment (already configured for abbot deploys).
+
+## Manual deploy (without CI)
+
+```bash
+export PUBLIC_CONVEX_URL=https://bright-eel-480.convex.cloud
+npm run build
+docker build --build-arg PUBLIC_CONVEX_URL="$PUBLIC_CONVEX_URL" -t ghcr.io/chrisyerga/mitch-dot-live:manual .
+docker push ghcr.io/chrisyerga/mitch-dot-live:manual
+
+ssh milo.newtricks.ai 'bash -lc "
+  source ~/.nvm/nvm.sh
+  npx --yes @lindale/porch service register \
+    --service-id mitch \
+    --domain ismitchmcconnella.live \
+    --container mitch-web \
+    --port 80 \
+    --www-redirect \
+    --image ghcr.io/chrisyerga/mitch-dot-live:manual \
+    --deploy-path /opt/mitch \
+    --json
+  cd /opt/porch && docker compose restart caddy
+"'
+```
 
 ## Phase 2: external polling
 
-Polling (Google Knowledge Graph, news RSS, etc.) will be added as Convex scheduled `internalAction`s writing to `pollSnapshots`. Status will **not** auto-flip without admin approval.
+Convex scheduled `internalAction`s will write to `pollSnapshots`. Status will **not** auto-flip without admin approval.

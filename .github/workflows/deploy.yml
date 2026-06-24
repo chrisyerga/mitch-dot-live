@@ -39,34 +39,36 @@ jobs:
           build-args: |
             PUBLIC_CONVEX_URL=${{ secrets.PUBLIC_CONVEX_URL }}
           tags: |
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
-            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/chrisyerga/mitch-dot-live:${{ github.sha }}
+            ghcr.io/chrisyerga/mitch-dot-live:latest
 
       - uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.DO_HOST }}
-          username: ${{ secrets.DO_USER }}
-          key: ${{ secrets.DO_SSH_KEY }}
+          host: ${{ secrets.PORCH_HOST }}
+          username: ${{ secrets.PORCH_USER }}
+          key: ${{ secrets.PORCH_SSH_KEY }}
           script: |
             bash -lc '
-              set -euo pipefail
-              mkdir -p /opt/mitch
-              cd /opt/mitch
-              cat > docker-compose.yml <<COMPOSE
-            services:
-              web:
-                image: ghcr.io/${{ github.repository }}:${{ github.sha }}
-                container_name: mitch-web
-                restart: unless-stopped
-                networks:
-                  - porch
+              set -e
+              [ -f "$HOME/.bashrc" ] && PS1=porch-ci . "$HOME/.bashrc"
+              set -u
 
-            networks:
-              porch:
-                external: true
-            COMPOSE
-              docker compose pull
-              docker compose up -d
+              export NVM_DIR="$HOME/.nvm"
+              [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+              : "${DIGITALOCEAN_TOKEN:?DIGITALOCEAN_TOKEN must be available to Porch}"
+
+              npx --yes @lindale/porch service register \
+                --service-id mitch \
+                --domain ismitchmcconnella.live \
+                --container mitch-web \
+                --port 80 \
+                --www-redirect \
+                --image ghcr.io/chrisyerga/mitch-dot-live:${{ github.sha }} \
+                --deploy-path /opt/mitch \
+                --json
+
+              cd /opt/porch
+              docker compose restart caddy
             '
 
   convex:
@@ -81,6 +83,6 @@ jobs:
 
       - run: npm ci
 
-      - run: npx convex deploy
+      - run: npx convex deploy --yes
         env:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
