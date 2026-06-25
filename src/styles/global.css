@@ -62,6 +62,23 @@ body {
   background: var(--surface);
 }
 
+/* ── Hero page title ── */
+.hero-headline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.hero-page-title {
+  font-size: clamp(2rem, 6.5vw, 3.5rem);
+  line-height: 1.08;
+}
+
+.hero-headline .hero-answer {
+  line-height: 0.95;
+}
+
 /* ── Header ── */
 .site-header-dot {
   width: 10px;

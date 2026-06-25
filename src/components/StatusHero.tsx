@@ -47,7 +47,7 @@ export function StatusHero({ theme }: StatusHeroProps) {
   const answer = status === undefined ? "…" : isAlive ? "YES" : "NO";
 
   return (
-    <section className="hero-section relative flex min-h-[84vh] flex-col items-center justify-center overflow-hidden px-6 pt-[70px] pb-16 text-center">
+    <section className="hero-section relative flex min-h-[84vh] flex-col items-center justify-center overflow-hidden px-6 pt-10 pb-16 text-center">
       {theme === "default" && (
         <>
           <div className="hero-default-grid pointer-events-none absolute inset-0" aria-hidden="true" />
@@ -76,14 +76,19 @@ export function StatusHero({ theme }: StatusHeroProps) {
       )}
 
       <div className="relative z-[5] flex flex-col items-center gap-[18px]">
+        <div className="hero-headline flex flex-col items-center">
+          <h1 className="hero-page-title m-0 font-display font-extrabold tracking-[-0.02em] text-[color:var(--fg)]">
+            Is Mitch McConnell Alive?
+          </h1>
+          <h2 className={`hero-answer m-0 ${isAlive ? "hero-answer-yes" : "hero-answer-no"}`}>
+            {answer}
+          </h2>
+        </div>
+
         <div className="status-badge inline-flex items-center gap-2 rounded-full border border-[color:var(--line)] px-[15px] py-[7px] text-xs font-semibold tracking-[0.09em] text-[color:var(--muted)] uppercase">
           <span className="site-header-dot h-2 w-2 shrink-0 rounded-full" aria-hidden="true" />
           Live status · as of {status ? formatAsOf(status.updatedAt) : "…"}
         </div>
-
-        <h1 className={`hero-answer m-0 ${isAlive ? "hero-answer-yes" : "hero-answer-no"}`}>
-          {answer}
-        </h1>
 
         <p className="hero-status-line m-0 text-[clamp(20px,3vw,30px)] font-semibold text-[color:var(--fg)]">
           {status === undefined
