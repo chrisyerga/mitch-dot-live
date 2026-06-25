@@ -47,33 +47,35 @@ export function StatusHero({ theme }: StatusHeroProps) {
   const answer = status === undefined ? "…" : isAlive ? "YES" : "NO";
 
   return (
-    <section className="hero-section relative flex min-h-[84vh] flex-col items-center justify-center overflow-hidden px-6 pt-10 pb-16 text-center">
-      {theme === "default" && (
-        <>
-          <div className="hero-default-grid pointer-events-none absolute inset-0" aria-hidden="true" />
-          <div className="hero-default-glow pointer-events-none absolute top-[-140px] left-1/2 h-[680px] w-[680px] -translate-x-1/2 rounded-full" aria-hidden="true" />
-        </>
-      )}
+    <section className="hero-section relative flex min-h-[84vh] flex-col items-center justify-center px-6 pt-10 pb-16 text-center">
+      <div className="hero-section-backdrop pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        {theme === "default" && (
+          <>
+            <div className="hero-default-grid absolute inset-0" />
+            <div className="hero-default-glow absolute top-[-140px] left-1/2 h-[680px] w-[680px] -translate-x-1/2 rounded-full" />
+          </>
+        )}
 
-      {theme === "celebration" && (
-        <>
-          <div className="hero-celebration-spin pointer-events-none absolute top-[-90px] left-1/2 h-[540px] w-[540px] -translate-x-1/2 rounded-full" aria-hidden="true" />
-          <div className="hero-celebration-sun pointer-events-none absolute top-[30px] left-1/2 h-[210px] w-[210px] -translate-x-1/2 rounded-full" aria-hidden="true" />
-          <div className="hero-celebration-rainbow pointer-events-none absolute bottom-[-380px] left-1/2 h-[780px] w-[780px] -translate-x-1/2 rounded-full" aria-hidden="true" />
-        </>
-      )}
+        {theme === "celebration" && (
+          <>
+            <div className="hero-celebration-spin absolute top-[-90px] left-1/2 h-[540px] w-[540px] -translate-x-1/2 rounded-full" />
+            <div className="hero-celebration-sun absolute top-[30px] left-1/2 h-[210px] w-[210px] -translate-x-1/2 rounded-full" />
+            <div className="hero-celebration-rainbow absolute bottom-[-380px] left-1/2 h-[780px] w-[780px] -translate-x-1/2 rounded-full" />
+          </>
+        )}
 
-      {theme === "memorial" && (
-        <div className="hero-memorial-scene pointer-events-none absolute top-4 left-1/2 z-0 max-w-[90vw] -translate-x-1/2" aria-hidden="true">
-          <div className="hero-memorial-clouds">
-            <span className="hero-memorial-cloud-puff hero-memorial-cloud-puff-a" />
-            <span className="hero-memorial-cloud-puff hero-memorial-cloud-puff-b" />
-            <span className="hero-memorial-cloud-puff hero-memorial-cloud-puff-c" />
-            <span className="hero-memorial-cloud-puff hero-memorial-cloud-puff-d" />
-            <span className="hero-memorial-cloud-puff hero-memorial-cloud-puff-e" />
+        {theme === "memorial" && (
+          <div className="hero-memorial-scene absolute top-4 left-1/2 max-w-[90vw] -translate-x-1/2">
+            <div className="hero-memorial-clouds">
+              <span className="hero-memorial-cloud-puff hero-memorial-cloud-puff-a" />
+              <span className="hero-memorial-cloud-puff hero-memorial-cloud-puff-b" />
+              <span className="hero-memorial-cloud-puff hero-memorial-cloud-puff-c" />
+              <span className="hero-memorial-cloud-puff hero-memorial-cloud-puff-d" />
+              <span className="hero-memorial-cloud-puff hero-memorial-cloud-puff-e" />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="relative z-[5] flex flex-col items-center gap-[18px]">
         <div className="hero-headline flex flex-col items-center">

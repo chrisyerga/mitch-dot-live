@@ -68,6 +68,10 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 0.15rem;
+  width: 100%;
+  max-width: 100%;
+  overflow: visible;
+  padding-inline: clamp(12px, 3vw, 32px);
 }
 
 .hero-page-title {
@@ -76,7 +80,7 @@ body {
 }
 
 .hero-headline .hero-answer {
-  line-height: 0.95;
+  line-height: 1;
 }
 
 /* ── Header ── */
@@ -263,6 +267,11 @@ body {
 /* ── Hero ── */
 .hero-section {
   position: relative;
+  overflow: visible;
+}
+
+.hero-section-backdrop {
+  z-index: 0;
 }
 
 .status-badge {
@@ -270,18 +279,27 @@ body {
 }
 
 .hero-answer {
+  display: inline-block;
   font-family: var(--font-display);
   font-weight: 800;
   font-size: clamp(110px, 26vw, 360px);
-  line-height: 0.82;
+  line-height: 1;
   letter-spacing: -0.03em;
   background-image: var(--answer-bg, none);
   -webkit-background-clip: text;
   background-clip: text;
+  -webkit-text-fill-color: var(--answer-color);
   color: var(--answer-color);
   background-size: 200% 100%;
   text-shadow: var(--answer-shadow, none);
   animation: var(--hero-anim, heartbeat 1.7s ease-in-out infinite);
+  transform-origin: center center;
+}
+
+[data-site-theme="celebration"] .hero-answer {
+  padding-inline: 0.08em;
+  padding-block: 0.04em;
+  -webkit-text-fill-color: transparent;
 }
 
 .hero-default-grid {
@@ -653,10 +671,10 @@ body {
 @keyframes wiggle {
   0%,
   100% {
-    transform: rotate(-2.5deg) scale(1);
+    transform: rotate(-2deg) scale(1);
   }
   50% {
-    transform: rotate(2.5deg) scale(1.025);
+    transform: rotate(2deg) scale(1.015);
   }
 }
 
