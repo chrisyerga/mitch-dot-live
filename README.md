@@ -3,7 +3,7 @@
 
 **Live site:** [ismitchmcconnella.live](https://ismitchmcconnella.live)
 
-An unofficial, non-partisan status tracker that answers one question in giant letters: **YES**, **NO**, or **MAYBE**. Built by [Lindale Labs, LLC](https://lindale.tech).
+An unofficial, non-partisan status tracker that answers one question in giant letters: **YES**, **NO**, or **MAYBE**.
 
 Built as an exercise to try out Astro which I haven't used in years. The idea was a website that would get either a few hits per day or a thousand per second, and could sustain that while still doing interesting work. I'm hosting this on a $6/mo shared VPS on Digital Ocean and a Convex free-tier backend. It typically serves the main site page in under 100ms. Naive load testing from my laptop shows the p90 response time stays under 1 second up to about 250rps.
 
