@@ -4,11 +4,35 @@ import { api } from "../../convex/_generated/api";
 import { captureEvent } from "../lib/analytics";
 
 function relativeWhen(timestamp: number, now: number): string {
-  const diffMs = now - timestamp;
+  const diffMs = Math.max(0, now - timestamp);
+  const minutes = Math.floor(diffMs / 60000);
   const hours = Math.floor(diffMs / 3600000);
-  if (hours < 24) return `${Math.max(1, hours)}h ago`;
-  const days = Math.floor(hours / 24);
-  return `${days}d ago`;
+  const days = Math.floor(diffMs / 86400000);
+
+  if (minutes < 60) return `${Math.max(1, minutes)}m ago`;
+  if (hours < 24) return `${hours}h ago`;
+  if (days < 7) return `${days}d ago`;
+  if (days < 28) return `${Math.floor(days / 7)}w ago`;
+
+  const then = new Date(timestamp);
+  const nowDate = new Date(now);
+
+  let months =
+    (nowDate.getFullYear() - then.getFullYear()) * 12 +
+    (nowDate.getMonth() - then.getMonth());
+  if (nowDate.getDate() < then.getDate()) months -= 1;
+
+  if (months < 12) return `${Math.max(1, months)}mo ago`;
+
+  let years = nowDate.getFullYear() - then.getFullYear();
+  if (
+    nowDate.getMonth() < then.getMonth() ||
+    (nowDate.getMonth() === then.getMonth() && nowDate.getDate() < then.getDate())
+  ) {
+    years -= 1;
+  }
+
+  return `${Math.max(1, years)}y ago`;
 }
 
 function formatPublishedDate(timestamp: number): string {
