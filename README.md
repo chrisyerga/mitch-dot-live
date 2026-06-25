@@ -1,4 +1,5 @@
 # Is Mitch McConnell Alive?
+<img src="https://lindale.atl1.cdn.digitaloceanspaces.com/mitch-neutral.png" width="350px"/>
 
 **Live site:** [ismitchmcconnella.live](https://ismitchmcconnella.live)
 
@@ -6,15 +7,32 @@ An unofficial, non-partisan status tracker that answers one question in giant le
 
 Built as an exercise to try out Astro which I haven't used in years. The idea was a website that would get either a few hits per day or a thousand per second, and could sustain that while still doing interesting work. I'm hosting this on a $6/mo shared VPS on Digital Ocean and a Convex free-tier backend. It typically serves the main site page in under 100ms. Naive load testing from my laptop shows the p90 response time stays under 1 second up to about 250rps.
 
-All those users **will** call the Convex backend queries as this is currently built. That is the likely next bottleneck and some local KV-store caching seems the obvious approach if that becomes problematic. I will need to use a better load-tester that runs "real" browser clients and Javascript to explore that. If users click on the [ismitchmcconnella.live/sources/](https://ismitchmcconnella.live/sources/) link that should provide live queries so none of that is cached or planned to be and I think that's fine.
+All those users **will** call the Convex backend queries as this is currently built. That is the likely next bottleneck and some local KV-store caching seems the obvious approach if that becomes problematic. I will need to use a better load-tester that runs "real" browser clients and Javascript to explore that. If users click on the [ismitchmcconnella.live/sources/](https://ismitchmcconnella.live/sources/) link that should provide live queries so none of that is cached or planned to be and I _think_ that's fine.
 
-This was also an exercise in SEO and web app analytics, which is why this has Posthog integrated. Astro is an excellent choice for that as well and this repo does its best (as far as my naïve knowledge goes) to optimize not only page load and app responsiveness, but also SEO metadata, OpenGraph metadata, etc. For example, the initial build failed to provide an actual answer to crawlers because the SSR simply said "Loading..." unless Javascript was running on the client. Still figuring all that out, but the Google search "Is Mitch McConnell alive website" (you need the word website it there for now) shows this site as the #2 result right under his own congressional website. We're #7 on the second page without the word "website" in the query. I've done nothing to build backlinks and haven't done any research with Ahrefs or other tools so I'm sure there's plenty more that could be optimized.
+This was also an exercise in SEO and web app analytics, which is why it has Posthog integrated. Astro is an excellent choice for that as well and this repo does its best (as far as my naïve knowledge goes) to optimize not only page load and app responsiveness, but also SEO metas, OpenGraph metadata, etc. I've already ran into a few obvious issues. For example, the initial version of this failed to provide an actual answer to crawlers because the SSR simply said "Loading..." unless Javascript was running on the client. This is now handled in src/pages/index.astro which performs the Convex query at ```npx astro build``` time and bakes ```initialStatus``` into the static Atro/VITE build of the site. For a situation such as this where there is but a single transition from YES->NO that's reasonable. Arguably that could just be set to a const of YES but this approach felt more correct.
 
-I'm an engineer, not a content marketer. But I do know that "answer" sites like this are an interesting SEO challenge/opportunity. This particular one is unique in that it's value and interest is entirely time-bounded so this site will disappear into obscurity after the Senator's passing. I am a Political moderate and have no interest in this particular politician. He was chosen solely because of his visibility and interest in his health.
+The SEO results have been solid. The Google search "Is Mitch McConnell alive website" (you need the word website it there for now) shows this site as the #2 result right under his own congressional website. We're #7 on the second page without the word "website" in the query. I've done nothing to build backlinks and haven't done any research with Ahrefs or other tools so I'm sure there's plenty more that could be optimized. Interestingly, I chose what others considered the "misspelled" domain with the "a" in there before the .live TLD as the canonical URL that is crawled by search engines. It would be interesting to try another site for another celebrity with the alternative domain. I have 3 .live domains (for a grand total of $9) to catch what people would most likey type but the isXXXa.live URL is my preference.
+
+I'm an engineer, not a content marketer. But I do know that "answer" sites like this are an interesting SEO challenge/opportunity. This particular one is unique in that its value and interest is entirely time-bounded so this site will disappear into obscurity after the Senator's passing. For the record, I am a Political moderate and have no interest in this particular politician one way or another. He was chosen solely because of his visibility and interest in his health and this all came together because a friend of mine asked the question...[ismitchmcconnella.live](https://ismitchmcconnella.live)
 
 ## Features
 
-### Public site
+### The Theme Gimmick
+<img src="https://lindale.atl1.cdn.digitaloceanspaces.com/mitch-happy.png" height="350px"/>
+<img src="https://lindale.atl1.cdn.digitaloceanspaces.com/mitch-sad.png" height="350px"/>
+
+Under the answer, users can select their Disposition towards the Senator to receive either a Happy or Sad theme based on his current state of life. This is stored solely in browser localStorage and is never passed to the backend. There are Posthog events whenever a user clicks on an option here just for the sake of seeing if this is even discoverable or interesting to people. The FAQs cover my feelings about this and if you read them you can read about that and even receieve an insult or two.
+
+Obviously, no Visual Designers were involved at all. It's pure AI coding agent slop design. If you feel the need to criticize the design, open a PR or STFU.
+
+### MAYBE
+
+<img src="https://lindale.atl1.cdn.digitaloceanspaces.com/mitch-maybe.png" width="450px">
+
+
+There will be an interesting point in time when the various data sources *disagree* on the Senator's status. When this occurs, the site displays MAYBE and shows the results from each dataSource. I made the decision that NO should only ever display as a result of a human admin approving the transition. This deicision keeps the site fresh without jumping the gun. Dewey beats Truman and all that.
+
+### Site Features
 
 - **YES / NO / MAYBE hero** — the headline answer updates in real time via Convex. When data sources disagree (e.g. a wire headline reports death but structured records don't confirm), the site shows **MAYBE** with a breakdown of which sources say what. A transition to NO, indicating the Senator has passed, requires manual confirmation via the /admin interface.
 - **Live data source table** — Wikidata, Wikipedia, Congress.gov, and wire headlines are polled every 15 minutes. Each source shows its parsed status, confidence score (0–100), and last-checked time. These are Convex functions triggered by a Convex cron job and can be kicked off manually from /admin
