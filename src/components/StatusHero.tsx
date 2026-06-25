@@ -83,7 +83,7 @@ export function StatusHero({ theme, status }: StatusHeroProps) {
 
         <div className="mt-2 w-full">
           <p className="m-0 mb-3 text-center text-xs font-semibold tracking-[0.08em] text-[color:var(--muted)] uppercase">
-            Source readings
+            BASED ON THE FOLLOWING LIVE DATA:
           </p>
           <DataSourcesTable compact />
           {!isAlive && (

@@ -30,3 +30,36 @@ export function formatCheckedAt(timestamp: number | null | undefined): string {
     timeZoneName: "shortGeneric",
   });
 }
+
+export function formatRelativeCheckedAt(
+  timestamp: number | null | undefined,
+  now: number = Date.now(),
+): string {
+  if (timestamp == null) {
+    return "Never";
+  }
+
+  const diffMs = Math.max(0, now - timestamp);
+  const seconds = Math.floor(diffMs / 1000);
+
+  if (seconds < 60) {
+    return seconds === 1 ? "1 second ago" : `${seconds} seconds ago`;
+  }
+
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) {
+    return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) {
+    return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+  }
+
+  const days = Math.floor(hours / 24);
+  if (days < 7) {
+    return days === 1 ? "1 day ago" : `${days} days ago`;
+  }
+
+  return formatCheckedAt(timestamp);
+}

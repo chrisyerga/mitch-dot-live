@@ -1,6 +1,7 @@
 import { useQuery } from "convex/react";
+import { useEffect, useState } from "react";
 import { api } from "../../convex/_generated/api";
-import { formatCheckedAt } from "../lib/format";
+import { formatCheckedAt, formatRelativeCheckedAt } from "../lib/format";
 import {
   confidenceTone,
   formatConfidence,
@@ -20,6 +21,35 @@ const confidenceClassName = {
   medium: "data-source-confidence-medium",
   low: "data-source-confidence-low",
 } as const;
+
+function RelativeCheckedAt({
+  timestamp,
+}: {
+  timestamp: number | null;
+}) {
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    if (timestamp == null) {
+      return;
+    }
+
+    const ageMs = Date.now() - timestamp;
+    const intervalMs =
+      ageMs < 60_000 ? 1_000 : ageMs < 3_600_000 ? 30_000 : 60_000;
+    const id = window.setInterval(() => setNow(Date.now()), intervalMs);
+    return () => window.clearInterval(id);
+  }, [timestamp]);
+
+  return (
+    <span
+      title={timestamp != null ? formatCheckedAt(timestamp) : undefined}
+      suppressHydrationWarning
+    >
+      {formatRelativeCheckedAt(timestamp, now)}
+    </span>
+  );
+}
 
 type DataSourcesTableProps = {
   showHistoryLink?: boolean;
@@ -116,7 +146,11 @@ export function DataSourcesTable({
                       </span>
                     </td>
                     <td className="px-4 py-3 align-top font-mono text-xs text-[color:var(--muted)] whitespace-nowrap">
-                      {formatCheckedAt(source.lastCheckedAt)}
+                      {compact ? (
+                        <RelativeCheckedAt timestamp={source.lastCheckedAt} />
+                      ) : (
+                        formatCheckedAt(source.lastCheckedAt)
+                      )}
                     </td>
                   </tr>
                 );
