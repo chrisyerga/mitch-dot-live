@@ -7,7 +7,7 @@ export const faqs = [
   {
     question: "How is the status verified?",
     answer:
-      "The answer reflects the most recent confirmed reporting from established news organizations and official statements. The timestamp shows when it was last checked. When there are conflicting reports the site may briefly enter a 'breaking news' state and will show which news sources are reporting which status until a clear confirmation is reached.",
+      "The YES/NO answer is set manually by an admin after reviewing automated source readings. High-confidence structured sources (Wikidata, Wikipedia, Congress.gov) can indicate alive when no death record exists. Wire outlets (AP, Reuters, and peers via Google News) only corroborate death when a recent headline is found — absence of a story is not proof someone is alive. Low-confidence signals like X trends are shown separately and are never enough on their own to change the status. Each source displays a confidence score from 0–100.",
   },
   {
     question: "Is this affiliated with the Senator or his office?",

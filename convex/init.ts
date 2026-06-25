@@ -1,5 +1,6 @@
 import { internalMutation } from "./_generated/server";
 import { v } from "convex/values";
+import { seedDataSources } from "./lib/seedDataSources";
 
 const seedNews = [
   {
@@ -62,22 +63,22 @@ export const seed = internalMutation({
       }
     }
 
-    const existingDataSource = await ctx.db
-      .query("dataSources")
-      .withIndex("by_key", (q) => q.eq("key", "wikidata"))
-      .unique();
-    if (!existingDataSource) {
-      await ctx.db.insert("dataSources", {
-        key: "wikidata",
-        name: "Wikidata (Google Knowledge Panel source)",
-        url: "https://www.google.com/search?kgmid=/m/01z6ls&hl=en-US",
-        currentStatus: "unknown",
-        enabled: true,
-        config: {
-          wikidataEntityId: "Q355522",
-          googleKgmid: "/m/01z6ls",
-          deathProperty: "P570",
-        },
+    for (const source of seedDataSources) {
+      const existing = await ctx.db
+        .query("dataSources")
+        .withIndex("by_key", (q) => q.eq("key", source.key))
+        .unique();
+
+      if (!existing) {
+        await ctx.db.insert("dataSources", source);
+        continue;
+      }
+
+      await ctx.db.patch("dataSources", existing._id, {
+        name: source.name,
+        url: source.url,
+        confidence: source.confidence,
+        config: source.config,
       });
     }
 

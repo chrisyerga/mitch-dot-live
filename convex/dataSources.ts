@@ -9,6 +9,7 @@ const dataSourceReturnValidator = v.object({
   key: v.string(),
   name: v.string(),
   url: v.string(),
+  confidence: v.number(),
   currentStatus: parsedStatusValidator,
   currentStatusDetail: v.union(v.string(), v.null()),
   lastCheckedAt: v.union(v.number(), v.null()),
@@ -17,10 +18,20 @@ const dataSourceReturnValidator = v.object({
   config: v.union(dataSourceConfigValidator, v.null()),
 });
 
+import { seedDataSources } from "./lib/seedDataSources";
+
+function resolveConfidence(source: { key: string; confidence?: number }): number {
+  if (source.confidence != null) {
+    return source.confidence;
+  }
+  return seedDataSources.find((item) => item.key === source.key)?.confidence ?? 0;
+}
+
 function toDataSourceReturn(source: {
   key: string;
   name: string;
   url: string;
+  confidence?: number;
   currentStatus: "alive" | "deceased" | "unknown" | "error";
   currentStatusDetail?: string;
   lastCheckedAt?: number;
@@ -30,12 +41,20 @@ function toDataSourceReturn(source: {
     wikidataEntityId?: string;
     googleKgmid?: string;
     deathProperty?: string;
+    wikipediaPageTitle?: string;
+    bioguideId?: string;
+    allowedDomains?: string[];
+    searchQuery?: string;
+    xQuery?: string;
+    maxAgeHours?: number;
+    rumorThreshold?: number;
   };
 }) {
   return {
     key: source.key,
     name: source.name,
     url: source.url,
+    confidence: resolveConfidence(source),
     currentStatus: source.currentStatus,
     currentStatusDetail: source.currentStatusDetail ?? null,
     lastCheckedAt: source.lastCheckedAt ?? null,

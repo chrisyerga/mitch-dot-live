@@ -118,4 +118,9 @@ ssh milo.newtricks.ai 'bash -lc "
 
 ## Phase 2: external polling
 
-Convex scheduled `internalAction`s will write to `pollSnapshots`. Status will **not** auto-flip without admin approval.
+Convex scheduled `internalAction`s write to `pollSnapshots`. Status will **not** auto-flip without admin approval.
+
+Optional Convex environment variables for data source pollers:
+
+- `CONGRESS_GOV_API_KEY` — [Congress.gov API](https://api.congress.gov/) key for the Congress.gov source
+- `X_BEARER_TOKEN` — X API v2 bearer token for the low-confidence X trends source

@@ -32,6 +32,7 @@ export default defineSchema({
     key: v.string(),
     name: v.string(),
     url: v.string(),
+    confidence: v.optional(v.number()),
     currentStatus: parsedStatusValidator,
     currentStatusDetail: v.optional(v.string()),
     lastCheckedAt: v.optional(v.number()),

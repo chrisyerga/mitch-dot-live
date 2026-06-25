@@ -303,6 +303,21 @@ body {
   color: #b45309;
 }
 
+.data-source-confidence-high {
+  background: color-mix(in srgb, #1f8a4c 14%, var(--surface));
+  color: #1f8a4c;
+}
+
+.data-source-confidence-medium {
+  background: color-mix(in srgb, var(--accent2) 14%, var(--surface));
+  color: var(--accent2);
+}
+
+.data-source-confidence-low {
+  background: color-mix(in srgb, #b45309 14%, var(--surface));
+  color: #b45309;
+}
+
 .hero-answer {
   display: inline-block;
   font-family: var(--font-display);

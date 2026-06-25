@@ -2,6 +2,8 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { formatCheckedAt } from "../lib/format";
 import {
+  confidenceTone,
+  formatConfidence,
   formatParsedStatusAnswer,
   parsedStatusTone,
 } from "../lib/pollDisplay";
@@ -11,6 +13,12 @@ const toneClassName = {
   negative: "data-source-answer-negative",
   neutral: "data-source-answer-neutral",
   error: "data-source-answer-error",
+} as const;
+
+const confidenceClassName = {
+  high: "data-source-confidence-high",
+  medium: "data-source-confidence-medium",
+  low: "data-source-confidence-low",
 } as const;
 
 type DataSourcesTableProps = {
@@ -23,20 +31,23 @@ export function DataSourcesTable({
   compact = false,
 }: DataSourcesTableProps) {
   const sources = useQuery(api.dataSources.list);
+  const sortedSources = sources
+    ? [...sources].sort((a, b) => b.confidence - a.confidence)
+    : sources;
 
   return (
-    <div className="data-sources-panel mx-auto w-full max-w-[640px] text-left">
-      {sources === undefined ? (
+    <div className="data-sources-panel mx-auto w-full max-w-[720px] text-left">
+      {sortedSources === undefined ? (
         <p className="m-0 text-center text-sm text-[color:var(--muted)]">
           Loading data sources…
         </p>
-      ) : sources.length === 0 ? (
+      ) : sortedSources.length === 0 ? (
         <p className="m-0 text-center text-sm text-[color:var(--muted)]">
           No data sources configured yet.
         </p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-[color:var(--line)] bg-[color:var(--surface)]/60">
-          <table className="data-sources-table w-full min-w-[420px] border-collapse text-sm">
+          <table className="data-sources-table w-full min-w-[520px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-[color:var(--line)] text-left">
                 <th className="px-4 py-3 text-[11px] font-bold tracking-[0.08em] text-[color:var(--muted)] uppercase">
@@ -46,13 +57,17 @@ export function DataSourcesTable({
                   Answer
                 </th>
                 <th className="px-4 py-3 text-[11px] font-bold tracking-[0.08em] text-[color:var(--muted)] uppercase">
+                  Confidence
+                </th>
+                <th className="px-4 py-3 text-[11px] font-bold tracking-[0.08em] text-[color:var(--muted)] uppercase">
                   Last checked
                 </th>
               </tr>
             </thead>
             <tbody>
-              {sources.map((source) => {
+              {sortedSources.map((source) => {
                 const tone = parsedStatusTone(source.currentStatus);
+                const confidence = confidenceTone(source.confidence);
                 return (
                   <tr
                     key={source.key}
@@ -89,6 +104,16 @@ export function DataSourcesTable({
                           {source.currentStatusDetail}
                         </p>
                       )}
+                    </td>
+                    <td className="px-4 py-3 align-top">
+                      <span
+                        className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${confidenceClassName[confidence]}`}
+                        title={`Source confidence score: ${source.confidence}/100`}
+                      >
+                        {compact
+                          ? source.confidence
+                          : formatConfidence(source.confidence)}
+                      </span>
                     </td>
                     <td className="px-4 py-3 align-top font-mono text-xs text-[color:var(--muted)] whitespace-nowrap">
                       {formatCheckedAt(source.lastCheckedAt)}

@@ -38,3 +38,17 @@ export function formatAnswerDetail(
   }
   return `${label} · ${detail}`;
 }
+
+export function formatConfidence(confidence: number): string {
+  if (confidence >= 85) return `High (${confidence})`;
+  if (confidence >= 60) return `Medium (${confidence})`;
+  return `Low (${confidence})`;
+}
+
+export function confidenceTone(
+  confidence: number,
+): "high" | "medium" | "low" {
+  if (confidence >= 85) return "high";
+  if (confidence >= 60) return "medium";
+  return "low";
+}
