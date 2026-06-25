@@ -57,9 +57,9 @@ npm run dev      # terminal 2
 
 | Secret | Purpose |
 |---|---|
-| `PORCH_HOST` | `milo.newtricks.ai` |
-| `PORCH_USER` | SSH user |
-| `PORCH_SSH_KEY` | SSH private key |
+| `PORCH_HOST` | `milo.newtricks.ai` (or use existing `DO_HOST`) |
+| `PORCH_USER` | `root` (or use existing `DO_USER`) |
+| `PORCH_SSH_KEY` | SSH private key (or use existing `DO_SSH_KEY`) |
 | `PUBLIC_CONVEX_URL` | `https://bright-eel-480.convex.cloud` |
 | `CONVEX_DEPLOY_KEY` | Convex production deploy key |
 
