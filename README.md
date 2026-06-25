@@ -23,6 +23,12 @@ The SEO results have been solid. The Google search "Is Mitch McConnell alive web
 
 I'm an engineer, not a content marketer. But I do know that "answer" sites like this are an interesting SEO challenge/opportunity. This particular one is unique in that its value and interest is entirely time-bounded so this site will disappear into obscurity after the Senator's passing. For the record, I am a Political moderate and have no interest in this particular politician one way or another. He was chosen solely because of his visibility and interest in his health and this all came together because a friend of mine asked the question...[ismitchmcconnella.live](https://ismitchmcconnella.live)
 
+### Data Sources
+
+Nothing novel here. I use WikiData and Wikipedia APIs. I also used the US Congress Data API. Did you know that you can sign up for an API Key for Congressional data and receive it instantly? This being the government, they email it to you in plaintext 🤣
+
+There is also a data source that uses the X.com API to track trending topics. Polling it every 15 minutes would cost ~$60/mo (rocket fuel ain't cheap, brother!) so I have it turned off but it was interesting to look at. I generously gave this data source a confidence score of 20%, so was never planning to lean on it much anyway. You can trigger it at-will on the /admin page if you want a quick thrill and are willing to spend two cents to do so.
+
 ## Features
 
 ### The Theme Gimmick
