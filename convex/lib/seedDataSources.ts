@@ -9,7 +9,7 @@ const DEFAULT_WIRE_DOMAINS = [
 export const seedDataSources = [
   {
     key: "wikidata",
-    name: "Wikidata (Google Knowledge Panel source)",
+    name: "Wikidata/Google Knowledge",
     url: "https://www.google.com/search?kgmid=/m/01z6ls&hl=en-US",
     confidence: 90,
     currentStatus: "unknown" as const,

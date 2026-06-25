@@ -1,6 +1,6 @@
 # Porch Deployment
 
-This service is managed by Porch on **milo** (`milo.newtricks.ai`).
+This service is managed by Porch on **milo** (`milo`).
 
 - Service id: `mitch`
 - Domains: `ismitchmcconnella.live` (canonical), `ismitchmcconnell.live`, `mitchmcconnell.live`
@@ -17,10 +17,10 @@ Agents should update app build/runtime details in this repo, then use the genera
 
 Configure these repository secrets before relying on automatic deploys:
 
-- `PORCH_HOST` — `milo.newtricks.ai`
+- `PORCH_HOST` — `milo`
 - `PORCH_USER` — SSH user (typically `root`)
 - `PORCH_SSH_KEY` — private SSH key for the host
-- `PUBLIC_CONVEX_URL` — e.g. `https://bright-eel-480.convex.cloud`
+- `PUBLIC_CONVEX_URL` — e.g. `https://mellifluous-rutabaga-420.convex.cloud`
 - `CONVEX_DEPLOY_KEY` — Convex production deploy key
 
 The deploy workflow publishes `ghcr.io/chrisyerga/mitch-dot-live`. Make sure the package is public or the Porch host can pull it.
