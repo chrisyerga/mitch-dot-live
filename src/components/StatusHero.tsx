@@ -1,16 +1,28 @@
+import { useEffect, useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { SiteTheme } from "../lib/themes";
 import type { StatusData } from "../lib/status";
 import { latestDataSourceCheckAt } from "../lib/dataSources";
 import { formatHeroDate } from "../lib/format";
+import {
+  analyzeSourceConsensusBreakdown,
+  DEV_PREVIEW_MAYBE_EVENT,
+  isDevPreviewMaybeEnabled,
+  maybeStatusLine,
+} from "../lib/sourceConsensus";
 import { DataSourcesTable } from "./DataSourcesTable";
 
 function statusLine(
   isAlive: boolean,
   theme: SiteTheme,
   message: string | null | undefined,
+  deceasedSourceName: string | null,
 ): string {
+  if (deceasedSourceName) {
+    return maybeStatusLine(deceasedSourceName);
+  }
+
   const custom = message?.trim();
   if (custom) return custom;
   if (!isAlive) return "He has passed away.";
@@ -25,11 +37,33 @@ type StatusHeroProps = {
 
 export function StatusHero({ theme, status }: StatusHeroProps) {
   const sources = useQuery(api.dataSources.list);
+  const [previewMaybe, setPreviewMaybe] = useState(false);
+
+  useEffect(() => {
+    const syncPreview = () => setPreviewMaybe(isDevPreviewMaybeEnabled());
+    syncPreview();
+    window.addEventListener(DEV_PREVIEW_MAYBE_EVENT, syncPreview);
+    return () => window.removeEventListener(DEV_PREVIEW_MAYBE_EVENT, syncPreview);
+  }, []);
+
   const isAlive = status?.isAlive ?? true;
-  const answer = isAlive ? "YES" : "NO";
+  const breakdown = analyzeSourceConsensusBreakdown(sources, {
+    isAlive,
+    previewMaybe,
+  });
+  const showMaybe = breakdown.heroAnswer === "MAYBE";
+  const answer = breakdown.heroAnswer;
+  const answerClass = showMaybe
+    ? "hero-answer-maybe"
+    : isAlive
+      ? "hero-answer-yes"
+      : "hero-answer-no";
   const latestCheckedAt = latestDataSourceCheckAt(sources);
   const asOfLabel =
     latestCheckedAt != null ? formatHeroDate(latestCheckedAt) : "…";
+  const line =
+    breakdown.statusLine ??
+    statusLine(isAlive, theme, status?.message, null);
 
   return (
     <section className="hero-section relative flex min-h-[84vh] flex-col items-center justify-center px-6 pt-10 pb-16 text-center">
@@ -67,9 +101,7 @@ export function StatusHero({ theme, status }: StatusHeroProps) {
           <h1 className="hero-page-title m-0 font-display font-extrabold tracking-[-0.02em] text-[color:var(--fg)]">
             Is Mitch McConnell Alive?
           </h1>
-          <h2 className={`hero-answer m-0 ${isAlive ? "hero-answer-yes" : "hero-answer-no"}`}>
-            {answer}
-          </h2>
+          <h2 className={`hero-answer m-0 ${answerClass}`}>{answer}</h2>
         </div>
 
         <div className="status-badge inline-flex items-center gap-2 rounded-full border border-[color:var(--line)] px-[15px] py-[7px] text-xs font-semibold tracking-[0.09em] text-[color:var(--muted)] uppercase">
@@ -77,8 +109,8 @@ export function StatusHero({ theme, status }: StatusHeroProps) {
           Live status · as of {asOfLabel}
         </div>
 
-        <p className="hero-status-line m-0 text-[clamp(20px,3vw,30px)] font-semibold text-[color:var(--fg)]">
-          {statusLine(isAlive, theme, status?.message)}
+        <p className="hero-status-line m-0 max-w-[640px] text-[clamp(18px,2.8vw,28px)] leading-snug font-semibold text-[color:var(--fg)]">
+          {line}
         </p>
 
         <div className="mt-2 w-full">

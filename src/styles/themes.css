@@ -85,3 +85,21 @@
   color: #b6bcc4;
   text-shadow: 0 0 32px rgba(120, 145, 175, 0.4);
 }
+
+.hero-answer-maybe {
+  --answer-color: #b45309;
+  --answer-shadow: 0 0 28px rgba(180, 83, 9, 0.25);
+  --hero-anim: heartbeat 2.4s ease-in-out infinite;
+}
+
+[data-site-theme="celebration"] .hero-answer-maybe {
+  --answer-bg: linear-gradient(90deg, #f59e0b, #fbbf24, #f59e0b);
+  --answer-color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: wiggle 1.3s ease-in-out infinite, rainbowMove 5s linear infinite;
+}
+
+[data-site-theme="memorial"] .hero-answer-maybe {
+  --answer-color: #d4a574;
+  --answer-shadow: 0 0 28px rgba(212, 165, 116, 0.35);
+}
