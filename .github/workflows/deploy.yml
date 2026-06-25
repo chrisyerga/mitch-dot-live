@@ -25,6 +25,8 @@ jobs:
       - run: npm run build
         env:
           PUBLIC_CONVEX_URL: ${{ secrets.PUBLIC_CONVEX_URL }}
+          PUBLIC_POSTHOG_PROJECT_TOKEN: ${{ secrets.PUBLIC_POSTHOG_PROJECT_TOKEN }}
+          PUBLIC_POSTHOG_HOST: ${{ secrets.PUBLIC_POSTHOG_HOST }}
 
       - uses: docker/login-action@v3
         with:
@@ -38,6 +40,8 @@ jobs:
           push: true
           build-args: |
             PUBLIC_CONVEX_URL=${{ secrets.PUBLIC_CONVEX_URL }}
+            PUBLIC_POSTHOG_PROJECT_TOKEN=${{ secrets.PUBLIC_POSTHOG_PROJECT_TOKEN }}
+            PUBLIC_POSTHOG_HOST=${{ secrets.PUBLIC_POSTHOG_HOST }}
           tags: |
             ghcr.io/chrisyerga/mitch-dot-live:${{ github.sha }}
             ghcr.io/chrisyerga/mitch-dot-live:latest

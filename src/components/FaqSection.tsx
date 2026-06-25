@@ -1,4 +1,5 @@
 import { faqs } from "../data/faq";
+import { captureEvent } from "../lib/analytics";
 
 export function FaqSection() {
   return (
@@ -10,7 +11,7 @@ export function FaqSection() {
           className="faq-item mb-2.5"
           onToggle={(e) => {
             if ((e.currentTarget as HTMLDetailsElement).open) {
-              window.posthog?.capture("faq_item_expanded", {
+              captureEvent("faq_item_expanded", {
                 question: faq.question,
               });
             }

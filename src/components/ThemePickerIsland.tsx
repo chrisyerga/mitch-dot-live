@@ -5,6 +5,7 @@ import {
   type ThemePreference,
   type SiteTheme,
 } from "../lib/themes";
+import { captureEvent } from "../lib/analytics";
 
 type ThemePickerIslandProps = {
   preference: ThemePreference;
@@ -50,7 +51,7 @@ export function ThemePickerIsland({
                   title={themePreferenceLabels[option].hint}
                   onClick={() => {
                     onChange(option);
-                    window.posthog?.capture("theme_preference_selected", {
+                    captureEvent("theme_preference_selected", {
                       preference: option,
                     });
                   }}

@@ -1,11 +1,12 @@
 import { useState, type FormEvent } from "react";
+import { captureEvent } from "../lib/analytics";
 
 export function NotifySection() {
   const [done, setDone] = useState(false);
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
-    window.posthog?.capture("notify_signup_submitted");
+    captureEvent("notify_signup_submitted");
     setDone(true);
   };
 

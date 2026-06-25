@@ -29,15 +29,18 @@ const born = new Date("1942-02-20T05:00:00Z");
 const senate = new Date("1985-01-03T05:00:00Z");
 
 export function StatsSection() {
-  const [now, setNow] = useState(() => new Date());
+  const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
+    setNow(new Date());
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  const age = diff(born, now);
-  const tenure = diff(senate, now);
+  const referenceNow = now ?? new Date();
+  const age = diff(born, referenceNow);
+  const tenure = diff(senate, referenceNow);
+  const showLive = now !== null;
 
   return (
     <section className="mx-auto max-w-[1180px] px-6 py-8">
@@ -48,8 +51,8 @@ export function StatsSection() {
             <span className="stat-number text-[color:var(--accent2)]">{age.years}</span>
             <span className="text-xl font-semibold text-[color:var(--fg)]">years old</span>
           </div>
-          <div className="stat-live mt-2 font-mono text-base text-[color:var(--muted)]">
-            {liveStr(age)}
+          <div className="stat-live mt-2 font-mono text-base text-[color:var(--muted)]" suppressHydrationWarning>
+            {showLive ? liveStr(age) : "…"}
           </div>
           <div className="stat-footnote mt-4 border-t border-[color:var(--line)] pt-3 text-[13px] text-[color:var(--muted)]">
             Born February 20, 1942 · Sheffield, Alabama
@@ -61,8 +64,8 @@ export function StatsSection() {
             <span className="stat-number text-[color:var(--accent)]">{tenure.years}</span>
             <span className="text-xl font-semibold text-[color:var(--fg)]">years</span>
           </div>
-          <div className="stat-live mt-2 font-mono text-base text-[color:var(--muted)]">
-            {liveStr(tenure)}
+          <div className="stat-live mt-2 font-mono text-base text-[color:var(--muted)]" suppressHydrationWarning>
+            {showLive ? liveStr(tenure) : "…"}
           </div>
           <div className="stat-footnote mt-4 border-t border-[color:var(--line)] pt-3 text-[13px] text-[color:var(--muted)]">
             Sworn in January 3, 1985

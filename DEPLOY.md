@@ -42,7 +42,11 @@ Production deployment: `https://bright-eel-480.convex.cloud`
 4. Frontend build needs:
    ```
    PUBLIC_CONVEX_URL=https://bright-eel-480.convex.cloud
+   PUBLIC_POSTHOG_PROJECT_TOKEN=<from PostHog project settings>
+   PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
    ```
+
+   PostHog uses one project for all environments (local and production). The token is baked into the static build at deploy time — no separate prod project is required. In PostHog, filter by `$host` or `$current_url` if you want to split local vs production traffic.
 
 ## Local development
 
@@ -61,6 +65,8 @@ npm run dev      # terminal 2
 | `PORCH_USER` | `root` (or use existing `DO_USER`) |
 | `PORCH_SSH_KEY` | SSH private key (or use existing `DO_SSH_KEY`) |
 | `PUBLIC_CONVEX_URL` | `https://bright-eel-480.convex.cloud` |
+| `PUBLIC_POSTHOG_PROJECT_TOKEN` | PostHog project API key (Project settings → Project API key) |
+| `PUBLIC_POSTHOG_HOST` | `https://us.i.posthog.com` |
 | `CONVEX_DEPLOY_KEY` | Convex production deploy key |
 
 The host also needs `DIGITALOCEAN_TOKEN` in the SSH user's environment (already configured for abbot deploys).
@@ -69,8 +75,14 @@ The host also needs `DIGITALOCEAN_TOKEN` in the SSH user's environment (already 
 
 ```bash
 export PUBLIC_CONVEX_URL=https://bright-eel-480.convex.cloud
+export PUBLIC_POSTHOG_PROJECT_TOKEN=phc_...
+export PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 npm run build
-docker build --build-arg PUBLIC_CONVEX_URL="$PUBLIC_CONVEX_URL" -t ghcr.io/chrisyerga/mitch-dot-live:manual .
+docker build \
+  --build-arg PUBLIC_CONVEX_URL="$PUBLIC_CONVEX_URL" \
+  --build-arg PUBLIC_POSTHOG_PROJECT_TOKEN="$PUBLIC_POSTHOG_PROJECT_TOKEN" \
+  --build-arg PUBLIC_POSTHOG_HOST="$PUBLIC_POSTHOG_HOST" \
+  -t ghcr.io/chrisyerga/mitch-dot-live:manual .
 docker push ghcr.io/chrisyerga/mitch-dot-live:manual
 
 ssh milo.newtricks.ai 'bash -lc "

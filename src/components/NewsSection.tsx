@@ -1,12 +1,33 @@
 import { useQuery } from "convex/react";
+import { useEffect, useState } from "react";
 import { api } from "../../convex/_generated/api";
+import { captureEvent } from "../lib/analytics";
 
-function relativeWhen(timestamp: number): string {
-  const diffMs = Date.now() - timestamp;
+function relativeWhen(timestamp: number, now: number): string {
+  const diffMs = now - timestamp;
   const hours = Math.floor(diffMs / 3600000);
   if (hours < 24) return `${Math.max(1, hours)}h ago`;
   const days = Math.floor(hours / 24);
   return `${days}d ago`;
+}
+
+function formatPublishedDate(timestamp: number): string {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "America/New_York",
+  }).format(new Date(timestamp));
+}
+
+function NewsWhen({ timestamp }: { timestamp: number }) {
+  const [label, setLabel] = useState(() => formatPublishedDate(timestamp));
+
+  useEffect(() => {
+    setLabel(relativeWhen(timestamp, Date.now()));
+  }, [timestamp]);
+
+  return <span suppressHydrationWarning>{label}</span>;
 }
 
 export function NewsSection() {
@@ -35,7 +56,7 @@ export function NewsSection() {
               rel="noopener noreferrer"
               className="news-card reveal-up group flex flex-col overflow-hidden no-underline"
               onClick={() => {
-                window.posthog?.capture("news_link_clicked", {
+                captureEvent("news_link_clicked", {
                   title: item.title,
                   source: item.source,
                   url: item.url,
@@ -66,7 +87,7 @@ export function NewsSection() {
                     {item.source}
                   </span>
                   <span className="text-[11px] text-[color:var(--muted)]">
-                    · {relativeWhen(item.publishedAt)}
+                    · <NewsWhen timestamp={item.publishedAt} />
                   </span>
                 </div>
                 <p className="m-0 text-[15px] leading-snug font-semibold text-[color:var(--fg)] group-hover:text-[color:var(--accent2)]">
