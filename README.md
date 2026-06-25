@@ -27,7 +27,7 @@ I'm an engineer, not a content marketer. But I do know that "answer" sites like 
 
 Nothing novel here. I use WikiData and Wikipedia APIs. I also used the US Congress Data API. Did you know that you can sign up for an API Key for Congressional data and receive it instantly? This being the government, they email it to you in plaintext 🤣
 
-There is also a data source that uses the X.com API to track trending topics. Polling it every 15 minutes would cost ~$60/mo (rocket fuel ain't cheap, brother!) so I have it turned off but it was interesting to look at. I generously gave this data source a confidence score of 20%, so was never planning to lean on it much anyway. You can trigger it at-will on the /admin page if you want a quick thrill and are willing to spend two cents to do so.
+There is also a data source that uses the X.com API to track trending topics. Polling it every 15 minutes would cost ~$60/mo (~~rocket fuel~~ orbital data centers ain't cheap, homie) so I have it turned off but it was interesting to look at. I generously gave this data source a confidence score of 20%, so was never planning to lean on it much anyway. You can trigger it at-will on the /admin page if you want a quick thrill and are willing to spend two cents to do so.
 
 ## Features
 
