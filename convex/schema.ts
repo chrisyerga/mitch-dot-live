@@ -6,6 +6,7 @@ export default defineSchema({
     isAlive: v.boolean(),
     updatedAt: v.number(),
     note: v.optional(v.string()),
+    message: v.optional(v.string()),
   }),
 
   newsItems: defineTable({

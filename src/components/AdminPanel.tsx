@@ -33,6 +33,8 @@ export function AdminPanel() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [confirmFlip, setConfirmFlip] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [messageDirty, setMessageDirty] = useState(false);
   const [form, setForm] = useState<NewsFormState>(emptyForm);
   const [editingId, setEditingId] = useState<Id<"newsItems"> | null>(null);
 
@@ -40,6 +42,7 @@ export function AdminPanel() {
   const logout = useMutation(api.admin.logout);
   const validateSession = useMutation(api.admin.validateSession);
   const setStatus = useMutation(api.status.set);
+  const setMessage = useMutation(api.status.setMessage);
   const createNews = useMutation(api.news.create);
   const updateNews = useMutation(api.news.update);
   const removeNews = useMutation(api.news.remove);
@@ -59,6 +62,11 @@ export function AdminPanel() {
       }
     });
   }, [validateSession]);
+
+  useEffect(() => {
+    if (status === undefined || messageDirty) return;
+    setStatusMessage(status?.message ?? "");
+  }, [status, messageDirty]);
 
   const handleLogin = async (event: FormEvent) => {
     event.preventDefault();
@@ -98,10 +106,29 @@ export function AdminPanel() {
         token,
         isAlive: !status.isAlive,
         note: "Updated via admin panel",
+        message: statusMessage.trim() || undefined,
       });
       setConfirmFlip(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to update status");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleSaveMessage = async () => {
+    if (!token) return;
+
+    setBusy(true);
+    setError(null);
+    try {
+      await setMessage({
+        token,
+        message: statusMessage.trim() || undefined,
+      });
+      setMessageDirty(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to save status message");
     } finally {
       setBusy(false);
     }
@@ -224,6 +251,33 @@ export function AdminPanel() {
             Cancel
           </button>
         )}
+
+        <label className="mt-6 block">
+          <span className="font-mono text-xs uppercase tracking-[0.2em] opacity-70">
+            Status message
+          </span>
+          <p className="mt-1 text-sm opacity-70">
+            Shown under the YES/NO answer on the homepage. Leave blank to use the default line.
+          </p>
+          <textarea
+            value={statusMessage}
+            onChange={(e) => {
+              setStatusMessage(e.target.value);
+              setMessageDirty(true);
+            }}
+            rows={3}
+            placeholder="Alive and in office."
+            className="admin-input mt-2 w-full rounded-lg px-3 py-2"
+          />
+        </label>
+        <button
+          type="button"
+          disabled={busy || status === undefined || status === null}
+          onClick={handleSaveMessage}
+          className="admin-btn mt-3 rounded-lg px-4 py-2"
+        >
+          {busy ? "Saving…" : "Save message"}
+        </button>
       </section>
 
       <section className="admin-card mt-8 rounded-2xl p-6">

@@ -25,7 +25,13 @@ function formatVerified(isAlive: boolean, timestamp: number): string {
   return `Last verified ${asOf}, ${time} ET · Source: Associated Press. Checked continuously against current reporting.`;
 }
 
-function statusLine(isAlive: boolean, theme: SiteTheme): string {
+function statusLine(
+  isAlive: boolean,
+  theme: SiteTheme,
+  message: string | null | undefined,
+): string {
+  const custom = message?.trim();
+  if (custom) return custom;
   if (!isAlive) return "He has passed away.";
   if (theme === "celebration") return "Alive, well, and accounted for.";
   return "Alive and in office.";
@@ -80,7 +86,9 @@ export function StatusHero({ theme }: StatusHeroProps) {
         </h1>
 
         <p className="hero-status-line m-0 text-[clamp(20px,3vw,30px)] font-semibold text-[color:var(--fg)]">
-          {status === undefined ? "Checking status…" : statusLine(isAlive, theme)}
+          {status === undefined
+            ? "Checking status…"
+            : statusLine(isAlive, theme, status?.message)}
         </p>
 
         {status && (
