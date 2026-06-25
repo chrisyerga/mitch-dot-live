@@ -62,7 +62,7 @@ export const seedDataSources = [
     url: "https://x.com/search?q=Mitch%20McConnell%20(died%20OR%20death)",
     confidence: 25,
     currentStatus: "unknown" as const,
-    enabled: true,
+    enabled: false,
     config: {
       xQuery: 'Mitch McConnell (died OR death OR obituary OR "passed away")',
       maxAgeHours: 24,

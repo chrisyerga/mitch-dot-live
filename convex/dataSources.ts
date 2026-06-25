@@ -1,9 +1,10 @@
-import { query } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import {
   dataSourceConfigValidator,
   parsedStatusValidator,
 } from "./lib/pollStatus";
+import { requireAdminSession } from "./lib/auth";
 
 const dataSourceReturnValidator = v.object({
   key: v.string(),
@@ -89,5 +90,35 @@ export const getByKey = query({
     }
 
     return toDataSourceReturn(source);
+  },
+});
+
+export const setEnabled = mutation({
+  args: {
+    token: v.string(),
+    key: v.string(),
+    enabled: v.boolean(),
+  },
+  returns: dataSourceReturnValidator,
+  handler: async (ctx, args) => {
+    await requireAdminSession(ctx, args.token);
+
+    const source = await ctx.db
+      .query("dataSources")
+      .withIndex("by_key", (q) => q.eq("key", args.key))
+      .unique();
+
+    if (!source) {
+      throw new Error(`Data source not found: ${args.key}`);
+    }
+
+    await ctx.db.patch("dataSources", source._id, { enabled: args.enabled });
+
+    const updated = await ctx.db.get("dataSources", source._id);
+    if (!updated) {
+      throw new Error("Failed to load updated data source");
+    }
+
+    return toDataSourceReturn(updated);
   },
 });

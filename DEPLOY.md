@@ -123,4 +123,5 @@ Convex scheduled `internalAction`s write to `pollSnapshots`. Status will **not**
 Optional Convex environment variables for data source pollers:
 
 - `CONGRESS_GOV_API_KEY` — [Congress.gov API](https://api.congress.gov/) key for the Congress.gov source
-- `X_BEARER_TOKEN` — X API v2 bearer token for the low-confidence X trends source
+
+The X (Twitter) trends source is disabled (`enabled: false` in seed) to avoid pay-per-use search costs. Re-run `npx convex run init:seed --prod` after deploy to sync the flag in production.

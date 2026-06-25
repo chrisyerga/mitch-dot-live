@@ -78,6 +78,7 @@ export const seed = internalMutation({
         name: source.name,
         url: source.url,
         confidence: source.confidence,
+        enabled: source.enabled,
         config: source.config,
       });
     }

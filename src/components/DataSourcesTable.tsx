@@ -62,7 +62,9 @@ export function DataSourcesTable({
 }: DataSourcesTableProps) {
   const sources = useQuery(api.dataSources.list);
   const sortedSources = sources
-    ? [...sources].sort((a, b) => b.confidence - a.confidence)
+    ? [...sources]
+        .filter((source) => source.enabled)
+        .sort((a, b) => b.confidence - a.confidence)
     : sources;
 
   return (
