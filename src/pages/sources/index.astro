@@ -1,0 +1,11 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SourcesHistoryPage } from "../../components/SourcesHistoryPage";
+---
+
+<BaseLayout
+  title="Data source polling"
+  description="Historical polling results from external data sources used to verify Senator Mitch McConnell's status."
+>
+  <SourcesHistoryPage client:load />
+</BaseLayout>

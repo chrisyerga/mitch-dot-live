@@ -15,6 +15,7 @@ import type * as init from "../init.js";
 import type * as lib_auth from "../lib/auth.js";
 import type * as lib_pollStatus from "../lib/pollStatus.js";
 import type * as news from "../news.js";
+import type * as pollSnapshots from "../pollSnapshots.js";
 import type * as polling_listEnabled from "../polling/listEnabled.js";
 import type * as polling_recordPoll from "../polling/recordPoll.js";
 import type * as polling_runPolls from "../polling/runPolls.js";
@@ -35,6 +36,7 @@ declare const fullApi: ApiFromModules<{
   "lib/auth": typeof lib_auth;
   "lib/pollStatus": typeof lib_pollStatus;
   news: typeof news;
+  pollSnapshots: typeof pollSnapshots;
   "polling/listEnabled": typeof polling_listEnabled;
   "polling/recordPoll": typeof polling_recordPoll;
   "polling/runPolls": typeof polling_runPolls;

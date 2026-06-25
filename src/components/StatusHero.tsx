@@ -1,28 +1,10 @@
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import type { SiteTheme } from "../lib/themes";
 import type { StatusData } from "../lib/status";
-
-function formatAsOf(timestamp: number): string {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "America/New_York",
-  }).format(new Date(timestamp));
-}
-
-function formatVerified(isAlive: boolean, timestamp: number): string {
-  const asOf = formatAsOf(timestamp);
-  const time = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    timeZone: "America/New_York",
-  }).format(new Date(timestamp));
-
-  if (!isAlive) {
-    return `Reported ${asOf}, ${time} ET · Source: Associated Press. This page is preserved as a memorial.`;
-  }
-  return `Last verified ${asOf}, ${time} ET · Source: Associated Press. Checked continuously against current reporting.`;
-}
+import { latestDataSourceCheckAt } from "../lib/dataSources";
+import { formatHeroDate } from "../lib/format";
+import { DataSourcesTable } from "./DataSourcesTable";
 
 function statusLine(
   isAlive: boolean,
@@ -42,8 +24,12 @@ type StatusHeroProps = {
 };
 
 export function StatusHero({ theme, status }: StatusHeroProps) {
+  const sources = useQuery(api.dataSources.list);
   const isAlive = status?.isAlive ?? true;
   const answer = isAlive ? "YES" : "NO";
+  const latestCheckedAt = latestDataSourceCheckAt(sources);
+  const asOfLabel =
+    latestCheckedAt != null ? formatHeroDate(latestCheckedAt) : "…";
 
   return (
     <section className="hero-section relative flex min-h-[84vh] flex-col items-center justify-center px-6 pt-10 pb-16 text-center">
@@ -76,7 +62,7 @@ export function StatusHero({ theme, status }: StatusHeroProps) {
         )}
       </div>
 
-      <div className="relative z-[5] flex flex-col items-center gap-[18px]">
+      <div className="relative z-[5] flex w-full max-w-[720px] flex-col items-center gap-[18px]">
         <div className="hero-headline flex flex-col items-center">
           <h1 className="hero-page-title m-0 font-display font-extrabold tracking-[-0.02em] text-[color:var(--fg)]">
             Is Mitch McConnell Alive?
@@ -88,18 +74,24 @@ export function StatusHero({ theme, status }: StatusHeroProps) {
 
         <div className="status-badge inline-flex items-center gap-2 rounded-full border border-[color:var(--line)] px-[15px] py-[7px] text-xs font-semibold tracking-[0.09em] text-[color:var(--muted)] uppercase">
           <span className="site-header-dot h-2 w-2 shrink-0 rounded-full" aria-hidden="true" />
-          Live status · as of {status ? formatAsOf(status.updatedAt) : "…"}
+          Live status · as of {asOfLabel}
         </div>
 
         <p className="hero-status-line m-0 text-[clamp(20px,3vw,30px)] font-semibold text-[color:var(--fg)]">
           {statusLine(isAlive, theme, status?.message)}
         </p>
 
-        {status && (
-          <p className="hero-verified m-0 mt-1 max-w-[540px] text-sm leading-normal text-[color:var(--muted)]">
-            {formatVerified(isAlive, status.updatedAt)}
+        <div className="mt-2 w-full">
+          <p className="m-0 mb-3 text-center text-xs font-semibold tracking-[0.08em] text-[color:var(--muted)] uppercase">
+            Source readings
           </p>
-        )}
+          <DataSourcesTable compact />
+          {!isAlive && (
+            <p className="m-0 mt-3 text-center text-sm text-[color:var(--muted)]">
+              This page is preserved as a memorial.
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="scroll-hint absolute bottom-[22px] left-1/2 z-[5] -translate-x-1/2 text-[11px] tracking-[0.14em] text-[color:var(--muted)] uppercase">

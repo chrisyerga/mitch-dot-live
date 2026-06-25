@@ -278,6 +278,31 @@ body {
   background: color-mix(in srgb, var(--surface) 70%, transparent);
 }
 
+.data-sources-table th,
+.data-sources-table td {
+  vertical-align: top;
+}
+
+.data-source-answer-positive {
+  background: color-mix(in srgb, #1f8a4c 16%, var(--surface));
+  color: #1f8a4c;
+}
+
+.data-source-answer-negative {
+  background: color-mix(in srgb, #8b2f2f 16%, var(--surface));
+  color: #8b2f2f;
+}
+
+.data-source-answer-neutral {
+  background: color-mix(in srgb, var(--muted) 16%, var(--surface));
+  color: var(--muted);
+}
+
+.data-source-answer-error {
+  background: color-mix(in srgb, #b45309 16%, var(--surface));
+  color: #b45309;
+}
+
 .hero-answer {
   display: inline-block;
   font-family: var(--font-display);
