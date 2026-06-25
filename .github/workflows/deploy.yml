@@ -63,7 +63,7 @@ jobs:
 
               npx --yes @lindale/porch service register \
                 --service-id mitch \
-                --domain ismitchmcconnella.live \
+                --domain ismitchmcconnella.live ismitchmcconnell.live mitchmcconnell.live \
                 --container mitch-web \
                 --port 80 \
                 --www-redirect \

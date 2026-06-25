@@ -1,0 +1,34 @@
+# App-container Caddy. Runs behind the Porch edge Caddy, which terminates TLS
+# for all registered domains and proxies plaintext HTTP here on :80 while
+# preserving the original Host header.
+{
+	admin off
+	# TLS is handled by the Porch edge proxy; serve plain HTTP internally.
+	auto_https off
+}
+
+:80 {
+	root * /srv
+	encode gzip zstd
+
+	# Canonicalize: 301-redirect any non-canonical host (the alternate
+	# domains) to the primary domain so search engines consolidate ranking.
+	@alt not host ismitchmcconnella.live
+	handle @alt {
+		redir https://ismitchmcconnella.live{uri} permanent
+	}
+
+	# Serve the static build for the canonical host.
+	handle {
+		file_server
+	}
+
+	# Custom 404 page with a proper 404 status code.
+	handle_errors {
+		@notfound expression {http.error.status_code} == 404
+		handle @notfound {
+			rewrite * /404.html
+			file_server
+		}
+	}
+}

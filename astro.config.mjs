@@ -12,6 +12,12 @@ export default defineConfig({
     react(),
     sitemap({
       filter: (page) => !page.includes('/admin'),
+      serialize(item) {
+        // Signal freshness on every deploy; the tracker's content is
+        // refreshed each time the site is rebuilt and shipped.
+        item.lastmod = new Date().toISOString();
+        return item;
+      },
     }),
   ],
 

@@ -3,6 +3,7 @@ import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 import PostHog from "../components/posthog.astro";
 import { SITE } from "../lib/site";
+import { faqs } from "../data/faq";
 
 interface Props {
   title?: string;
@@ -21,6 +22,46 @@ const {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL(image, Astro.site);
 const pageTitle = title === SITE.title ? title : `${title} | ${SITE.name}`;
+
+const structuredData = noindex
+  ? []
+  : [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: SITE.name,
+        url: SITE.url,
+        description: SITE.description,
+        inLanguage: "en-US",
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: "Mitch McConnell",
+        jobTitle: "United States Senator",
+        affiliation: {
+          "@type": "GovernmentOrganization",
+          name: "United States Senate",
+        },
+        sameAs: [
+          "https://en.wikipedia.org/wiki/Mitch_McConnell",
+          "https://www.wikidata.org/wiki/Q355522",
+          "https://www.congress.gov/member/mitch-mcconnell/M000355",
+        ],
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqs.map((faq) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: faq.answer,
+          },
+        })),
+      },
+    ];
 ---
 
 <!doctype html>
@@ -70,16 +111,9 @@ const pageTitle = title === SITE.title ? title : `${title} | ${SITE.name}`;
       rel="stylesheet"
     />
 
-    {!noindex && (
-      <script type="application/ld+json" set:html={JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        name: SITE.name,
-        url: SITE.url,
-        description: SITE.description,
-        inLanguage: "en-US",
-      })} />
-    )}
+    {structuredData.map((data) => (
+      <script type="application/ld+json" set:html={JSON.stringify(data)} />
+    ))}
 
     <PostHog />
     <ClientRouter />

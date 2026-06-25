@@ -1,6 +1,5 @@
-import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
 import type { SiteTheme } from "../lib/themes";
+import type { StatusData } from "../lib/status";
 
 function formatAsOf(timestamp: number): string {
   return new Intl.DateTimeFormat("en-US", {
@@ -39,12 +38,12 @@ function statusLine(
 
 type StatusHeroProps = {
   theme: SiteTheme;
+  status: StatusData;
 };
 
-export function StatusHero({ theme }: StatusHeroProps) {
-  const status = useQuery(api.status.get);
+export function StatusHero({ theme, status }: StatusHeroProps) {
   const isAlive = status?.isAlive ?? true;
-  const answer = status === undefined ? "…" : isAlive ? "YES" : "NO";
+  const answer = isAlive ? "YES" : "NO";
 
   return (
     <section className="hero-section relative flex min-h-[84vh] flex-col items-center justify-center px-6 pt-10 pb-16 text-center">
@@ -93,9 +92,7 @@ export function StatusHero({ theme }: StatusHeroProps) {
         </div>
 
         <p className="hero-status-line m-0 text-[clamp(20px,3vw,30px)] font-semibold text-[color:var(--fg)]">
-          {status === undefined
-            ? "Checking status…"
-            : statusLine(isAlive, theme, status?.message)}
+          {statusLine(isAlive, theme, status?.message)}
         </p>
 
         {status && (

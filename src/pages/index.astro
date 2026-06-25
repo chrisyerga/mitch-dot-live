@@ -2,8 +2,45 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { SiteShell } from "../components/SiteShell";
 import { SITE } from "../lib/site";
+import { ConvexHttpClient } from "convex/browser";
+import { api } from "../../convex/_generated/api";
+import type { StatusData } from "../lib/status";
+
+// Fetch the current status at build time so the YES/NO answer is baked into
+// the static HTML for crawlers. The live `useQuery` still updates it in the
+// browser, so even a stale build self-corrects for visitors with JS.
+let initialStatus: StatusData = null;
+const convexUrl = import.meta.env.PUBLIC_CONVEX_URL;
+if (convexUrl) {
+  try {
+    const client = new ConvexHttpClient(convexUrl);
+    initialStatus = await client.query(api.status.get, {});
+  } catch (err) {
+    console.error("Failed to prefetch status for SSR:", err);
+  }
+}
+
+const asOf = initialStatus
+  ? new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+      timeZone: "America/New_York",
+    }).format(new Date(initialStatus.updatedAt))
+  : null;
+
+let description: string = SITE.description;
+if (initialStatus && asOf) {
+  description = initialStatus.isAlive
+    ? `Yes. As of ${asOf}, Senator Mitch McConnell is alive. Independent, non-partisan live status tracker.`
+    : `No. Senator Mitch McConnell has died, as reported ${asOf}. Independent, non-partisan status tracker.`;
+}
 ---
 
-<BaseLayout title={SITE.title} description={SITE.description}>
-  <SiteShell client:load transition:persist="site-shell" />
+<BaseLayout title={SITE.title} description={description}>
+  <SiteShell
+    client:load
+    initialStatus={initialStatus}
+    transition:persist="site-shell"
+  />
 </BaseLayout>

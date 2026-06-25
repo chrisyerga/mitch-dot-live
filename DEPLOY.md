@@ -6,6 +6,22 @@
 - **Backend:** Convex Cloud (`bright-eel-480` production deployment).
 - **Edge:** Porch-managed Caddy on **milo** (`milo.newtricks.ai`), `porch` Docker network.
 
+### Domains
+
+Three domains are routed to the same `mitch-web` container:
+
+| Domain | Role |
+|---|---|
+| `ismitchmcconnella.live` | **Canonical** — served directly; all canonical tags, OG URLs, and the sitemap point here. |
+| `ismitchmcconnell.live` | Alias — 301-redirected to the canonical domain. |
+| `mitchmcconnell.live` | Alias — 301-redirected to the canonical domain. |
+
+The Porch edge terminates TLS for all three and proxies to the container. The
+container's `Caddyfile` issues the 301 from the alias hosts to the canonical
+host so search engines consolidate ranking on one domain. To change the
+canonical domain, update both `Caddyfile` and `site` in `astro.config.mjs`
+(plus `SITE.url` in `src/lib/site.ts`).
+
 See [PORCH.md](./PORCH.md) for service registration details.
 
 ## Host state (milo)
@@ -89,7 +105,7 @@ ssh milo.newtricks.ai 'bash -lc "
   source ~/.nvm/nvm.sh
   npx --yes @lindale/porch service register \
     --service-id mitch \
-    --domain ismitchmcconnella.live \
+    --domain ismitchmcconnella.live ismitchmcconnell.live mitchmcconnell.live \
     --container mitch-web \
     --port 80 \
     --www-redirect \

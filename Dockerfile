@@ -14,5 +14,6 @@ RUN npm run build
 
 FROM caddy:2-alpine AS runner
 COPY --from=build /app/dist /srv
+COPY Caddyfile /etc/caddy/Caddyfile
 EXPOSE 80
-CMD ["caddy", "file-server", "--root", "/srv", "--listen", ":80"]
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]

@@ -3,10 +3,13 @@
 This service is managed by Porch on **milo** (`milo.newtricks.ai`).
 
 - Service id: `mitch`
-- Domain: `ismitchmcconnella.live`
+- Domains: `ismitchmcconnella.live` (canonical), `ismitchmcconnell.live`, `mitchmcconnell.live`
 - Container: `mitch-web`
 - Internal port: `80`
 - Deploy path: `/opt/mitch`
+
+The alias domains are 301-redirected to the canonical domain by the container's
+`Caddyfile`. The Porch edge routes all three to the container.
 
 Agents should update app build/runtime details in this repo, then use the generated deploy workflow. Host routing, DNS, TLS, and Caddy reloads are owned by `npx @lindale/porch service register --json` on the VPS.
 
@@ -27,7 +30,7 @@ The deploy workflow publishes `ghcr.io/chrisyerga/mitch-dot-live`. Make sure the
 ```bash
 npx @lindale/porch service register \
   --service-id mitch \
-  --domain ismitchmcconnella.live \
+  --domain ismitchmcconnella.live ismitchmcconnell.live mitchmcconnell.live \
   --container mitch-web \
   --port 80 \
   --www-redirect \

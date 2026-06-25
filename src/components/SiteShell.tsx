@@ -1,5 +1,8 @@
+import { useEffect } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import type { StatusData } from "../lib/status";
+import { captureEvent } from "../lib/analytics";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { ThemeDecorations } from "./ThemeDecorations";
 import { SiteHeader } from "./SiteHeader";
@@ -34,17 +37,24 @@ function SiteFooter() {
   );
 }
 
-function SiteShellInner() {
-  const status = useQuery(api.status.get);
+function SiteShellInner({ initialStatus }: { initialStatus: StatusData }) {
+  const live = useQuery(api.status.get);
+  const status = live ?? initialStatus;
   const isAlive = status?.isAlive ?? true;
   const { preference, setPreference, visualTheme } = useThemePreference(isAlive);
+
+  useEffect(() => {
+    if (status) {
+      captureEvent("status_viewed", { isAlive: status.isAlive });
+    }
+  }, [status?.isAlive]);
 
   return (
     <div className="site-root relative min-h-screen overflow-x-hidden bg-[color:var(--bg)] text-[color:var(--fg)]">
       <ThemeDecorations theme={visualTheme} />
       <div className="relative z-[1]">
         <SiteHeader />
-        <StatusHero theme={visualTheme} />
+        <StatusHero theme={visualTheme} status={status} />
         <ThemePickerIsland
           preference={preference}
           onChange={setPreference}
@@ -61,10 +71,14 @@ function SiteShellInner() {
   );
 }
 
-export function SiteShell() {
+export function SiteShell({
+  initialStatus = null,
+}: {
+  initialStatus?: StatusData;
+}) {
   return (
     <ConvexClientProvider>
-      <SiteShellInner />
+      <SiteShellInner initialStatus={initialStatus} />
     </ConvexClientProvider>
   );
 }

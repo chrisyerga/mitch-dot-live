@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Page not found"
+  description="That page doesn't exist. Head back to the live status."
+  noindex
+>
+  <main
+    class="flex min-h-screen flex-col items-center justify-center gap-5 bg-[color:var(--bg)] px-6 text-center text-[color:var(--fg)]"
+  >
+    <p
+      class="font-display text-[clamp(72px,18vw,160px)] leading-none font-extrabold tracking-[-0.02em] text-[color:var(--accent2)]"
+    >
+      404
+    </p>
+    <h1 class="m-0 font-display text-[clamp(22px,4vw,34px)] font-bold">
+      That page wandered off.
+    </h1>
+    <p class="m-0 max-w-[480px] text-[15px] leading-relaxed text-[color:var(--muted)]">
+      The page you're looking for doesn't exist — but the one question that
+      matters still has a live answer.
+    </p>
+    <a
+      href="/"
+      class="mt-2 inline-flex items-center gap-2 rounded-full border border-[color:var(--line)] bg-[color:var(--accent2)] px-6 py-3 text-sm font-semibold tracking-[0.04em] text-white uppercase transition-opacity hover:opacity-90"
+    >
+      Is Mitch McConnell alive? →
+    </a>
+  </main>
+</BaseLayout>
