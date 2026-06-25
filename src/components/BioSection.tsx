@@ -1,5 +1,8 @@
 import { bioFacts } from "../data/facts";
 
+const OFFICIAL_PORTRAIT_URL =
+  "https://lindale.atl1.cdn.digitaloceanspaces.com/official-photo.jpg";
+
 export function BioSection() {
   return (
     <section id="bio" className="mx-auto max-w-[1180px] px-6 py-11">
@@ -8,10 +11,13 @@ export function BioSection() {
         <span className="text-[13px] text-[color:var(--muted)]">Quick facts</span>
       </div>
       <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-start gap-6">
-        <div className="bio-portrait reveal-up flex min-h-[360px] items-center justify-center">
-          <span className="rounded bg-[color:var(--surface)] px-2.5 py-1 font-mono text-[11px] tracking-[0.12em] text-[color:var(--muted)]">
-            PORTRAIT
-          </span>
+        <div className="bio-portrait bio-portrait-filled reveal-up overflow-hidden">
+          <img
+            src={OFFICIAL_PORTRAIT_URL}
+            alt="Official portrait of Senator Mitch McConnell"
+            className="h-full min-h-[360px] w-full object-cover object-[center_12%]"
+            loading="lazy"
+          />
         </div>
         <div className="reveal-up reveal-up-delay-1">
           <p className="mb-[18px] text-base leading-[1.65] text-[color:var(--fg)]">

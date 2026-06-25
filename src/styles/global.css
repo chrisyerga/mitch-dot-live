@@ -465,6 +465,10 @@ body {
   );
 }
 
+.bio-portrait-filled {
+  background-image: none;
+}
+
 .timeline-badge {
   font-size: 10px;
   font-weight: 800;

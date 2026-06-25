@@ -7,7 +7,7 @@ export const faqs = [
   {
     question: "How is the status verified?",
     answer:
-      "The answer reflects the most recent confirmed reporting from established news organizations and official statements. The timestamp shows when it was last checked.",
+      "The answer reflects the most recent confirmed reporting from established news organizations and official statements. The timestamp shows when it was last checked. When there are conflicting reports the site may briefly enter a 'breaking news' state and will show which news sources are reporting which status until a clear confirmation is reached.",
   },
   {
     question: "Is this affiliated with the Senator or his office?",
@@ -17,11 +17,11 @@ export const faqs = [
   {
     question: "What happens when the answer changes?",
     answer:
-      "The page updates automatically for everyone watching. We hope that is not for a very long time.",
+      "The page updates automatically for everyone watching. You do not need to refresh the page. Live status updates and news are fed to your browser as they happen.",
   },
   {
-    question: "Is this disrespectful?",
+    question: "Why are you celebrating a man's death?",
     answer:
-      "It is a factual status indicator, presented plainly. We wish the Senator continued good health.",
+      "The default presentation is a factual status indicator, presented plainly. We wish the Senator good health, but find it absurd to believe that he is capable of representing his consituents after multiple bluescreens. We offer the option for those with a disposition one way or the other to celebrate either status with kitties, flowers and rainbows. A better question might be 'Why has political discourse in our country become so partisan and angry?' and 'What needs to happen to change the status quo?'",
   },
 ];

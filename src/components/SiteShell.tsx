@@ -55,7 +55,6 @@ function SiteShellInner() {
         <BioSection />
         <TimelineSection />
         <FaqSection />
-        <NotifySection />
         <SiteFooter />
       </div>
     </div>
