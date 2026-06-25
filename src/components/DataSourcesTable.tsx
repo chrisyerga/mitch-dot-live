@@ -62,9 +62,7 @@ export function DataSourcesTable({
 }: DataSourcesTableProps) {
   const sources = useQuery(api.dataSources.list);
   const sortedSources = sources
-    ? [...sources]
-        .filter((source) => source.enabled)
-        .sort((a, b) => b.confidence - a.confidence)
+    ? [...sources].sort((a, b) => b.confidence - a.confidence)
     : sources;
 
   return (
@@ -103,7 +101,9 @@ export function DataSourcesTable({
                 return (
                   <tr
                     key={source.key}
-                    className="border-b border-[color:var(--line)] last:border-b-0"
+                    className={`border-b border-[color:var(--line)] last:border-b-0 ${
+                      source.enabled ? "" : "data-source-row-disabled"
+                    }`}
                   >
                     <td className="px-4 py-3 align-top">
                       <a
@@ -114,6 +114,11 @@ export function DataSourcesTable({
                       >
                         {source.name}
                       </a>
+                      {!source.enabled && (
+                        <p className="m-0 mt-1 text-xs text-[color:var(--muted)]">
+                          Polling paused
+                        </p>
+                      )}
                       {!compact && source.lastError && (
                         <p className="m-0 mt-1 text-xs text-[color:var(--danger,#c0392b)]">
                           {source.lastError}

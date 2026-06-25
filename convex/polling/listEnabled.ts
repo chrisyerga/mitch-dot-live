@@ -49,3 +49,32 @@ export const listEnabledSources = internalQuery({
     }));
   },
 });
+
+const pollSourceReturnValidator = v.object({
+  key: v.string(),
+  name: v.string(),
+  config: v.union(dataSourceConfigValidator, v.null()),
+});
+
+export const getPollSourceByKey = internalQuery({
+  args: {
+    key: v.string(),
+  },
+  returns: v.union(pollSourceReturnValidator, v.null()),
+  handler: async (ctx, args) => {
+    const source = await ctx.db
+      .query("dataSources")
+      .withIndex("by_key", (q) => q.eq("key", args.key))
+      .unique();
+
+    if (!source) {
+      return null;
+    }
+
+    return {
+      key: source.key,
+      name: source.name,
+      config: source.config ?? null,
+    };
+  },
+});

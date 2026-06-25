@@ -46,7 +46,9 @@ function DataSourcesPanel({
 }) {
   const dataSources = useQuery(api.dataSources.list);
   const setEnabled = useMutation(api.dataSources.setEnabled);
+  const runNow = useMutation(api.dataSources.runNow);
   const [togglingKey, setTogglingKey] = useState<string | null>(null);
+  const [runningKey, setRunningKey] = useState<string | null>(null);
 
   const sortedSources = dataSources
     ? [...dataSources].sort((a, b) => b.confidence - a.confidence)
@@ -64,12 +66,25 @@ function DataSourcesPanel({
     }
   };
 
+  const handleRunNow = async (key: string) => {
+    setRunningKey(key);
+    onError(null);
+    try {
+      await runNow({ token, key });
+    } catch (err) {
+      onError(err instanceof Error ? err.message : "Failed to run poll");
+    } finally {
+      setRunningKey(null);
+    }
+  };
+
   return (
     <section className="admin-card mt-8 rounded-2xl p-6">
       <h2 className="font-display text-2xl">Data sources</h2>
       <p className="mt-2 opacity-80">
-        Enable or disable automated polling. Disabled sources are hidden on the
-        public homepage and excluded from consensus scoring.
+        Enable or disable automated polling. Disabled sources stay visible on the
+        public homepage with their last result but are excluded from consensus
+        scoring. Use Run now for a one-off poll (works even when disabled).
       </p>
 
       {sortedSources === undefined ? (
@@ -94,6 +109,9 @@ function DataSourcesPanel({
                 <th className="px-3 py-2 font-mono text-xs uppercase tracking-[0.12em] opacity-70">
                   Last checked
                 </th>
+                <th className="px-3 py-2 font-mono text-xs uppercase tracking-[0.12em] opacity-70">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -104,7 +122,7 @@ function DataSourcesPanel({
                       <input
                         type="checkbox"
                         checked={source.enabled}
-                        disabled={togglingKey === source.key}
+                        disabled={togglingKey === source.key || runningKey === source.key}
                         onChange={(e) =>
                           void handleToggle(source.key, e.target.checked)
                         }
@@ -134,6 +152,16 @@ function DataSourcesPanel({
                   <td className="px-3 py-2 align-top">{source.confidence}</td>
                   <td className="px-3 py-2 align-top font-mono text-xs opacity-70">
                     {formatCheckedAt(source.lastCheckedAt)}
+                  </td>
+                  <td className="px-3 py-2 align-top">
+                    <button
+                      type="button"
+                      className="admin-btn rounded-lg px-3 py-1 text-sm"
+                      disabled={runningKey === source.key || togglingKey === source.key}
+                      onClick={() => void handleRunNow(source.key)}
+                    >
+                      {runningKey === source.key ? "Running…" : "Run now"}
+                    </button>
                   </td>
                 </tr>
               ))}

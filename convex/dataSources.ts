@@ -1,5 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 import {
   dataSourceConfigValidator,
   parsedStatusValidator,
@@ -120,5 +121,31 @@ export const setEnabled = mutation({
     }
 
     return toDataSourceReturn(updated);
+  },
+});
+
+export const runNow = mutation({
+  args: {
+    token: v.string(),
+    key: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await requireAdminSession(ctx, args.token);
+
+    const source = await ctx.db
+      .query("dataSources")
+      .withIndex("by_key", (q) => q.eq("key", args.key))
+      .unique();
+
+    if (!source) {
+      throw new Error(`Data source not found: ${args.key}`);
+    }
+
+    await ctx.scheduler.runAfter(0, internal.polling.runPolls.runSource, {
+      key: args.key,
+    });
+
+    return null;
   },
 });

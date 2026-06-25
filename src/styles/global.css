@@ -283,6 +283,20 @@ body {
   vertical-align: top;
 }
 
+.data-source-row-disabled {
+  opacity: 0.72;
+}
+
+.data-source-row-disabled .data-source-answer-positive,
+.data-source-row-disabled .data-source-answer-negative,
+.data-source-row-disabled .data-source-answer-neutral,
+.data-source-row-disabled .data-source-answer-error,
+.data-source-row-disabled .data-source-confidence-high,
+.data-source-row-disabled .data-source-confidence-medium,
+.data-source-row-disabled .data-source-confidence-low {
+  opacity: 0.85;
+}
+
 .data-source-answer-positive {
   background: color-mix(in srgb, #1f8a4c 16%, var(--surface));
   color: #1f8a4c;

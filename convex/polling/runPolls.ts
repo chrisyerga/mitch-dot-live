@@ -54,11 +54,13 @@ export const runSource = internalAction({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const sources = await ctx.runQuery(internal.polling.listEnabled.listEnabledSources);
-    const source = sources.find((item) => item.key === args.key);
+    const source = await ctx.runQuery(
+      internal.polling.listEnabled.getPollSourceByKey,
+      { key: args.key },
+    );
 
     if (!source) {
-      throw new Error(`Enabled data source not found: ${args.key}`);
+      throw new Error(`Data source not found: ${args.key}`);
     }
 
     await executePoll(ctx, source);
