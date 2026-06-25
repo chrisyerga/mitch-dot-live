@@ -16,6 +16,7 @@ export default defineSchema({
     publishedAt: v.number(),
     isPublished: v.boolean(),
     sortOrder: v.number(),
+    imageUrl: v.optional(v.string()),
   }).index("by_published_and_sort", ["isPublished", "sortOrder"]),
 
   adminSessions: defineTable({

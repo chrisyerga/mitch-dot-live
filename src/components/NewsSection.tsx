@@ -35,10 +35,23 @@ export function NewsSection() {
               rel="noopener noreferrer"
               className="news-card reveal-up group flex flex-col overflow-hidden no-underline"
             >
-              <div className="news-card-photo flex h-[138px] items-center justify-center border-b border-[color:var(--line)]">
-                <span className="rounded bg-[color:var(--surface)] px-2 py-1 font-mono text-[11px] tracking-[0.12em] text-[color:var(--muted)]">
-                  PHOTO
-                </span>
+              <div
+                className={`news-card-photo flex h-[138px] items-center justify-center overflow-hidden border-b border-[color:var(--line)] ${
+                  item.imageUrl ? "news-card-photo-filled" : ""
+                }`}
+              >
+                {item.imageUrl ? (
+                  <img
+                    src={item.imageUrl}
+                    alt=""
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span className="rounded bg-[color:var(--surface)] px-2 py-1 font-mono text-[11px] tracking-[0.12em] text-[color:var(--muted)]">
+                    PHOTO
+                  </span>
+                )}
               </div>
               <div className="flex flex-1 flex-col gap-2 p-4">
                 <div className="flex items-center gap-2">

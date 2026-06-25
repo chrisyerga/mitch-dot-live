@@ -12,6 +12,7 @@ type NewsFormState = {
   publishedAt: string;
   isPublished: boolean;
   sortOrder: number;
+  imageUrl: string;
 };
 
 const emptyForm: NewsFormState = {
@@ -21,6 +22,7 @@ const emptyForm: NewsFormState = {
   publishedAt: new Date().toISOString().slice(0, 10),
   isPublished: true,
   sortOrder: 0,
+  imageUrl: "",
 };
 
 function getStoredToken(): string | null {
@@ -149,6 +151,7 @@ export function AdminPanel() {
         publishedAt: Date.parse(form.publishedAt),
         isPublished: form.isPublished,
         sortOrder: form.sortOrder,
+        imageUrl: form.imageUrl.trim() || undefined,
       };
 
       if (!payload.title || !payload.url || !payload.source) {
@@ -179,6 +182,7 @@ export function AdminPanel() {
       publishedAt: new Date(item.publishedAt).toISOString().slice(0, 10),
       isPublished: item.isPublished,
       sortOrder: item.sortOrder,
+      imageUrl: item.imageUrl ?? "",
     });
   };
 
@@ -300,6 +304,16 @@ export function AdminPanel() {
               onChange={(e) => setForm({ ...form, url: e.target.value })}
               className="admin-input mt-2 w-full rounded-lg px-3 py-2"
               required
+            />
+          </label>
+          <label className="block md:col-span-2">
+            <span className="font-mono text-xs uppercase tracking-[0.2em] opacity-70">Image URL</span>
+            <input
+              type="url"
+              value={form.imageUrl}
+              onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+              placeholder="https://example.com/photo.jpg"
+              className="admin-input mt-2 w-full rounded-lg px-3 py-2"
             />
           </label>
           <label className="block">

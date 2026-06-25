@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { requireAdminSession } from "./lib/auth";
+import type { Doc } from "./_generated/dataModel";
 
 const newsItemValidator = v.object({
   _id: v.id("newsItems"),
@@ -10,7 +11,22 @@ const newsItemValidator = v.object({
   publishedAt: v.number(),
   isPublished: v.boolean(),
   sortOrder: v.number(),
+  imageUrl: v.union(v.string(), v.null()),
 });
+
+function toNewsItem(item: Doc<"newsItems">) {
+  const imageUrl = item.imageUrl?.trim();
+  return {
+    _id: item._id,
+    title: item.title,
+    url: item.url,
+    source: item.source,
+    publishedAt: item.publishedAt,
+    isPublished: item.isPublished,
+    sortOrder: item.sortOrder,
+    imageUrl: imageUrl ? imageUrl : null,
+  };
+}
 
 export const listPublished = query({
   args: {},
@@ -23,15 +39,7 @@ export const listPublished = query({
 
     return items
       .sort((a, b) => a.sortOrder - b.sortOrder || b.publishedAt - a.publishedAt)
-      .map((item) => ({
-        _id: item._id,
-        title: item.title,
-        url: item.url,
-        source: item.source,
-        publishedAt: item.publishedAt,
-        isPublished: item.isPublished,
-        sortOrder: item.sortOrder,
-      }));
+      .map(toNewsItem);
   },
 });
 
@@ -46,15 +54,7 @@ export const listAll = query({
     const items = await ctx.db.query("newsItems").collect();
     return items
       .sort((a, b) => a.sortOrder - b.sortOrder || b.publishedAt - a.publishedAt)
-      .map((item) => ({
-        _id: item._id,
-        title: item.title,
-        url: item.url,
-        source: item.source,
-        publishedAt: item.publishedAt,
-        isPublished: item.isPublished,
-        sortOrder: item.sortOrder,
-      }));
+      .map(toNewsItem);
   },
 });
 
@@ -67,11 +67,13 @@ export const create = mutation({
     publishedAt: v.number(),
     isPublished: v.boolean(),
     sortOrder: v.number(),
+    imageUrl: v.optional(v.string()),
   },
   returns: v.id("newsItems"),
   handler: async (ctx, args) => {
     await requireAdminSession(ctx, args.token);
 
+    const imageUrl = args.imageUrl?.trim();
     return await ctx.db.insert("newsItems", {
       title: args.title,
       url: args.url,
@@ -79,6 +81,7 @@ export const create = mutation({
       publishedAt: args.publishedAt,
       isPublished: args.isPublished,
       sortOrder: args.sortOrder,
+      imageUrl: imageUrl || undefined,
     });
   },
 });
@@ -93,6 +96,7 @@ export const update = mutation({
     publishedAt: v.number(),
     isPublished: v.boolean(),
     sortOrder: v.number(),
+    imageUrl: v.optional(v.string()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -103,6 +107,7 @@ export const update = mutation({
       throw new Error("News item not found");
     }
 
+    const imageUrl = args.imageUrl?.trim();
     await ctx.db.patch("newsItems", args.id, {
       title: args.title,
       url: args.url,
@@ -110,6 +115,7 @@ export const update = mutation({
       publishedAt: args.publishedAt,
       isPublished: args.isPublished,
       sortOrder: args.sortOrder,
+      imageUrl: imageUrl || undefined,
     });
 
     return null;
