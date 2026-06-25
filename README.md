@@ -5,7 +5,7 @@
 
 An unofficial, non-partisan status tracker that answers one question in giant letters: **YES**, **NO**, or **MAYBE**.
 
-Built as an exercise to try out Astro which I haven't used in years. The idea was a website that would get either a few hits per day or a thousand per second, and could sustain that while still doing interesting work. I'm hosting this on a $6/mo shared VPS on Digital Ocean and a Convex free-tier backend. It typically serves the main site page in under 100ms. Naive load testing from my laptop shows the p90 response time stays under 1 second up to about 250rps.
+Built as an exercise to try out Astro which I haven't used in years. Astro 7 was just released with Vite 8 so I used both for this. No Astro 7 functionality is used, just the speedy new Astro Build and the perf improvements in the already-zippy Vite. The idea was a website that would get either a few hits per day or a thousand per second, and could sustain that while still doing interesting work. I'm hosting this on a $6/mo shared VPS on Digital Ocean and a Convex free-tier backend. It typically serves the main site page in under 100ms. Naive load testing from my laptop shows the p90 response time stays under 1 second up to about 250rps.
 
 All those users **will** call the Convex backend queries as this is currently built. That is the likely next bottleneck and some local KV-store caching seems the obvious approach if that becomes problematic. I will need to use a better load-tester that runs "real" browser clients and Javascript to explore that. If users click on the [ismitchmcconnella.live/sources/](https://ismitchmcconnella.live/sources/) link that should provide live queries so none of that is cached or planned to be and I _think_ that's fine.
 
