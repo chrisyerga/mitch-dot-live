@@ -5,9 +5,17 @@
 
 An unofficial, non-partisan status tracker that answers one question in giant letters: **YES**, **NO**, or **MAYBE**.
 
+## Goals
+
+### Maximum Value from a $6/mo VPS and the Convex Free Tier
+
 Built as an exercise to try out Astro which I haven't used in years. Astro 7 was just released with Vite 8 so I used both for this. No Astro 7 functionality is used, just the speedy new Astro Build and the perf improvements in the already-zippy Vite. The idea was a website that would get either a few hits per day or a thousand per second, and could sustain that while still doing interesting work. I'm hosting this on a $6/mo shared VPS on Digital Ocean and a Convex free-tier backend. It typically serves the main site page in under 100ms. Naive load testing from my laptop shows the p90 response time stays under 1 second up to about 250rps.
 
-All those users **will** call the Convex backend queries as this is currently built. That is the likely next bottleneck and some local KV-store caching seems the obvious approach if that becomes problematic. I will need to use a better load-tester that runs "real" browser clients and Javascript to explore that. If users click on the [ismitchmcconnella.live/sources/](https://ismitchmcconnella.live/sources/) link that should provide live queries so none of that is cached or planned to be and I _think_ that's fine.
+All those users **will** call the Convex backend queries as this is currently built. That is the next bottleneck. My aim is to push the Convex Free Tier as far as I can go. Each Convex browser client maintains a Websocket for live DB updates and there's a hard cap at 1,000 concurrent, as well as a limit of 1,000,000 queries. There's 3 queries in the current home page (Status, Sources and News Feed) so those could be collapsed into a single query but that's not a big win. I plan to use a better load-tester that runs "real" browser clients and Javascript to explore how things behave at the limit. One thing I'm definitely *not* concerned with is the [ismitchmcconnella.live/sources/](https://ismitchmcconnella.live/sources/) page. I expect very little traffic there and would want to keep that live and simple. I _think_ that's fine.
+
+I have also forked the Convex backend and have been exploring how it works. I've stepped through a decent bit of their Tokio-based Rust backend and have started to get my head around Isolate, which is their V8 edge sandbox that runs the Javascript queries/functions. I might also try out hosting a local self-hosted Convex backend tuned specifically for this use-case to see if having greater control over their runtime gives me more options.
+
+### SEO Experience
 
 This was also an exercise in SEO and web app analytics, which is why it has Posthog integrated. Astro is an excellent choice for that as well and this repo does its best (as far as my naïve knowledge goes) to optimize not only page load and app responsiveness, but also SEO metas, OpenGraph metadata, etc. I've already ran into a few obvious issues. For example, the initial version of this failed to provide an actual answer to crawlers because the SSR simply said "Loading..." unless Javascript was running on the client. This is now handled in src/pages/index.astro which performs the Convex query at ```npx astro build``` time and bakes ```initialStatus``` into the static Atro/VITE build of the site. For a situation such as this where there is but a single transition from YES->NO that's reasonable. Arguably that could just be set to a const of YES but this approach felt more correct.
 
