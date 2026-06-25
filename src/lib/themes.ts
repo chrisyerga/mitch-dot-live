@@ -10,15 +10,15 @@ export const themePreferenceLabels: Record<
 > = {
   neutral: {
     label: "Neutral",
-    hint: "Professional patriotic theme regardless of status.",
+    hint: "Simple factual theme regardless of status.",
   },
   happyNow: {
     label: "Happy Now",
-    hint: "Celebrate while he's alive; mourn when he's not.",
+    hint: "Celebrate his life; mourn his death.",
   },
   happyLater: {
     label: "Happy Later",
-    hint: "Mourn prematurely; celebrate when the day comes.",
+    hint: "Mourn now; celebrate when he passes.",
   },
 };
 
