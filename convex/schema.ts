@@ -1,5 +1,9 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import {
+  dataSourceConfigValidator,
+  parsedStatusValidator,
+} from "./lib/pollStatus";
 
 export default defineSchema({
   status: defineTable({
@@ -24,12 +28,30 @@ export default defineSchema({
     expiresAt: v.number(),
   }).index("by_token", ["token"]),
 
+  dataSources: defineTable({
+    key: v.string(),
+    name: v.string(),
+    url: v.string(),
+    currentStatus: parsedStatusValidator,
+    currentStatusDetail: v.optional(v.string()),
+    lastCheckedAt: v.optional(v.number()),
+    lastError: v.optional(v.string()),
+    enabled: v.boolean(),
+    config: v.optional(dataSourceConfigValidator),
+  })
+    .index("by_key", ["key"])
+    .index("by_enabled", ["enabled"]),
+
   pollSnapshots: defineTable({
+    dataSourceKey: v.string(),
     source: v.string(),
     fetchedAt: v.number(),
     payload: v.string(),
     summary: v.optional(v.string()),
-  }),
+    parsedStatus: parsedStatusValidator,
+    checkOk: v.boolean(),
+    error: v.optional(v.string()),
+  }).index("by_data_source_and_time", ["dataSourceKey", "fetchedAt"]),
 
   editorialPosts: defineTable({
     title: v.string(),

@@ -9,9 +9,16 @@
  */
 
 import type * as admin from "../admin.js";
+import type * as crons from "../crons.js";
+import type * as dataSources from "../dataSources.js";
 import type * as init from "../init.js";
 import type * as lib_auth from "../lib/auth.js";
+import type * as lib_pollStatus from "../lib/pollStatus.js";
 import type * as news from "../news.js";
+import type * as polling_listEnabled from "../polling/listEnabled.js";
+import type * as polling_recordPoll from "../polling/recordPoll.js";
+import type * as polling_runPolls from "../polling/runPolls.js";
+import type * as polling_wikidata from "../polling/wikidata.js";
 import type * as status from "../status.js";
 
 import type {
@@ -22,9 +29,16 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   admin: typeof admin;
+  crons: typeof crons;
+  dataSources: typeof dataSources;
   init: typeof init;
   "lib/auth": typeof lib_auth;
+  "lib/pollStatus": typeof lib_pollStatus;
   news: typeof news;
+  "polling/listEnabled": typeof polling_listEnabled;
+  "polling/recordPoll": typeof polling_recordPoll;
+  "polling/runPolls": typeof polling_runPolls;
+  "polling/wikidata": typeof polling_wikidata;
   status: typeof status;
 }>;
 
