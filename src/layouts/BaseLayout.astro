@@ -1,6 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
+import PostHog from "../components/posthog.astro";
 
 interface Props {
   title?: string;
@@ -28,6 +29,7 @@ const {
       rel="stylesheet"
     />
     <title>{title}</title>
+    <PostHog />
     <ClientRouter />
     <script is:inline>
       (function () {

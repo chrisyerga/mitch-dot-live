@@ -48,7 +48,12 @@ export function ThemePickerIsland({
                   }`}
                   aria-pressed={active}
                   title={themePreferenceLabels[option].hint}
-                  onClick={() => onChange(option)}
+                  onClick={() => {
+                    onChange(option);
+                    window.posthog?.capture("theme_preference_selected", {
+                      preference: option,
+                    });
+                  }}
                 >
                   {label}
                 </button>

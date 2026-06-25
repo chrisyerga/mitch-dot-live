@@ -5,6 +5,7 @@ export function NotifySection() {
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
+    window.posthog?.capture("notify_signup_submitted");
     setDone(true);
   };
 

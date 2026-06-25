@@ -34,6 +34,13 @@ export function NewsSection() {
               target="_blank"
               rel="noopener noreferrer"
               className="news-card reveal-up group flex flex-col overflow-hidden no-underline"
+              onClick={() => {
+                window.posthog?.capture("news_link_clicked", {
+                  title: item.title,
+                  source: item.source,
+                  url: item.url,
+                });
+              }}
             >
               <div
                 className={`news-card-photo flex h-[138px] items-center justify-center overflow-hidden border-b border-[color:var(--line)] ${
