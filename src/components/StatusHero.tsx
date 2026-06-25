@@ -1,8 +1,6 @@
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { SiteTheme } from "../lib/themes";
-import type { ThemePreference } from "../lib/themes";
-import { ThemePicker } from "./ThemePicker";
 
 function formatAsOf(timestamp: number): string {
   return new Intl.DateTimeFormat("en-US", {
@@ -35,11 +33,9 @@ function statusLine(isAlive: boolean, theme: SiteTheme): string {
 
 type StatusHeroProps = {
   theme: SiteTheme;
-  preference: ThemePreference;
-  onPreferenceChange: (preference: ThemePreference) => void;
 };
 
-export function StatusHero({ theme, preference, onPreferenceChange }: StatusHeroProps) {
+export function StatusHero({ theme }: StatusHeroProps) {
   const status = useQuery(api.status.get);
   const isAlive = status?.isAlive ?? true;
   const answer = status === undefined ? "…" : isAlive ? "YES" : "NO";
@@ -92,12 +88,6 @@ export function StatusHero({ theme, preference, onPreferenceChange }: StatusHero
             {formatVerified(isAlive, status.updatedAt)}
           </p>
         )}
-
-        <ThemePicker
-          preference={preference}
-          onChange={onPreferenceChange}
-          visualTheme={theme}
-        />
       </div>
 
       <div className="scroll-hint absolute bottom-[22px] left-1/2 z-[5] -translate-x-1/2 text-[11px] tracking-[0.14em] text-[color:var(--muted)] uppercase">

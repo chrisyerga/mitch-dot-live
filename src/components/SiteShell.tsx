@@ -4,6 +4,7 @@ import { ConvexClientProvider } from "./ConvexClientProvider";
 import { ThemeDecorations } from "./ThemeDecorations";
 import { SiteHeader } from "./SiteHeader";
 import { StatusHero } from "./StatusHero";
+import { ThemePickerIsland } from "./ThemePickerIsland";
 import { StatsSection } from "./StatsSection";
 import { NewsSection } from "./NewsSection";
 import { BioSection } from "./BioSection";
@@ -43,10 +44,11 @@ function SiteShellInner() {
       <ThemeDecorations theme={visualTheme} />
       <div className="relative z-[1]">
         <SiteHeader />
-        <StatusHero
-          theme={visualTheme}
+        <StatusHero theme={visualTheme} />
+        <ThemePickerIsland
           preference={preference}
-          onPreferenceChange={setPreference}
+          onChange={setPreference}
+          visualTheme={visualTheme}
         />
         <StatsSection />
         <NewsSection />
