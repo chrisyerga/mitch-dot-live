@@ -1,7 +1,5 @@
 import { bioFacts } from "../data/facts";
-
-const OFFICIAL_PORTRAIT_URL =
-  "https://lindale.atl1.cdn.digitaloceanspaces.com/official-photo.jpg";
+import { SITE } from "../lib/site";
 
 export function BioSection() {
   return (
@@ -13,7 +11,7 @@ export function BioSection() {
       <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-start gap-6">
         <div className="bio-portrait bio-portrait-filled reveal-up overflow-hidden">
           <img
-            src={OFFICIAL_PORTRAIT_URL}
+            src={SITE.officialPhotoUrl}
             alt="Official portrait of Senator Mitch McConnell"
             className="h-full min-h-[360px] w-full object-cover object-[center_12%]"
             loading="lazy"

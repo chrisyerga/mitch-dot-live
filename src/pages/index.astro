@@ -1,8 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { SiteShell } from "../components/SiteShell";
+import { SITE } from "../lib/site";
 ---
 
-<BaseLayout>
+<BaseLayout title={SITE.title} description={SITE.description}>
   <SiteShell client:load transition:persist="site-shell" />
 </BaseLayout>
