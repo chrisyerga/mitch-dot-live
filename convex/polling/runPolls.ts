@@ -1,14 +1,15 @@
-import { internalAction, type ActionCtx } from "../_generated/server";
+import { internalAction } from "../_generated/server";
 import { v } from "convex/values";
 import { internal } from "../_generated/api";
 import { pollSource } from "./pollSource";
+import type { PollRecord } from "./recordPoll";
 import type { EnabledDataSource } from "../lib/pollStatus";
 
-async function executePoll(ctx: ActionCtx, source: EnabledDataSource) {
+async function pollToRecord(source: EnabledDataSource): Promise<PollRecord> {
   try {
     const pollResult = await pollSource(source);
 
-    await ctx.runMutation(internal.polling.recordPoll.recordPoll, {
+    return {
       dataSourceKey: source.key,
       source: source.name,
       parsedStatus: pollResult.parsedStatus,
@@ -16,12 +17,12 @@ async function executePoll(ctx: ActionCtx, source: EnabledDataSource) {
       checkOk: true,
       payload: pollResult.payload,
       summary: pollResult.summary,
-    });
+    };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Unknown polling error";
 
-    await ctx.runMutation(internal.polling.recordPoll.recordPoll, {
+    return {
       dataSourceKey: source.key,
       source: source.name,
       parsedStatus: "error",
@@ -30,7 +31,7 @@ async function executePoll(ctx: ActionCtx, source: EnabledDataSource) {
       error: message,
       payload: JSON.stringify({ error: message }),
       summary: `Poll failed: ${message}`,
-    });
+    };
   }
 }
 
@@ -39,9 +40,16 @@ export const runPolls = internalAction({
   returns: v.null(),
   handler: async (ctx) => {
     const sources = await ctx.runQuery(internal.polling.listEnabled.listEnabledSources);
+    const records: PollRecord[] = [];
 
     for (const source of sources) {
-      await executePoll(ctx, source);
+      records.push(await pollToRecord(source));
+    }
+
+    if (records.length > 0) {
+      await ctx.runMutation(internal.polling.recordPoll.recordPollBatch, {
+        records,
+      });
     }
 
     return null;
@@ -63,7 +71,8 @@ export const runSource = internalAction({
       throw new Error(`Data source not found: ${args.key}`);
     }
 
-    await executePoll(ctx, source);
+    const record = await pollToRecord(source);
+    await ctx.runMutation(internal.polling.recordPoll.recordPoll, record);
     return null;
   },
 });

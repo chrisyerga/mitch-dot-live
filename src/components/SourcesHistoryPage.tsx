@@ -1,9 +1,9 @@
-import { useQuery } from "convex/react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { api } from "../../convex/_generated/api";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { SiteHeader } from "./SiteHeader";
 import { formatCheckedAt } from "../lib/format";
+import { usePointInTimeQuery } from "../lib/usePointInTimeQuery";
 import {
   confidenceTone,
   formatAnswerDetail,
@@ -26,15 +26,29 @@ const confidenceClassName = {
 } as const;
 
 function SourcesHistoryInner() {
-  const sources = useQuery(api.dataSources.list);
+  const {
+    data: sources,
+    isLoading: sourcesLoading,
+    refresh: refreshSources,
+  } = usePointInTimeQuery(api.dataSources.list, useMemo(() => ({}), []));
   const sortedSources = sources
     ? [...sources].sort((a, b) => b.confidence - a.confidence)
     : sources;
   const [filterKey, setFilterKey] = useState<string>("all");
-  const history = useQuery(
-    api.pollSnapshots.listRecent,
-    filterKey === "all" ? { limit: 20 } : { dataSourceKey: filterKey, limit: 20 },
+  const historyArgs = useMemo(
+    () =>
+      filterKey === "all" ? { limit: 20 } : { dataSourceKey: filterKey, limit: 20 },
+    [filterKey],
   );
+  const {
+    data: history,
+    isLoading: historyLoading,
+    refresh: refreshHistory,
+  } = usePointInTimeQuery(api.pollSnapshots.listRecent, historyArgs);
+
+  const refreshAll = async () => {
+    await Promise.all([refreshSources(), refreshHistory()]);
+  };
 
   return (
     <div className="site-root relative min-h-screen overflow-x-hidden bg-[color:var(--bg)] text-[color:var(--fg)]">
@@ -63,7 +77,7 @@ function SourcesHistoryInner() {
             <h2 className="m-0 mb-4 text-lg font-semibold text-[color:var(--fg)]">
               Current readings
             </h2>
-            {sortedSources === undefined ? (
+            {sortedSources === undefined || sourcesLoading ? (
               <p className="text-sm text-[color:var(--muted)]">Loading sources…</p>
             ) : sortedSources.length === 0 ? (
               <p className="text-sm text-[color:var(--muted)]">No data sources yet.</p>
@@ -158,26 +172,41 @@ function SourcesHistoryInner() {
               <h2 className="m-0 text-lg font-semibold text-[color:var(--fg)]">
                 Polling history
               </h2>
-              {sources && sortedSources && sortedSources.length > 0 && (
-                <label className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
-                  Filter
-                  <select
-                    value={filterKey}
-                    onChange={(event) => setFilterKey(event.target.value)}
-                    className="rounded-md border border-[color:var(--line)] bg-[color:var(--surface)] px-2 py-1 text-sm text-[color:var(--fg)]"
-                  >
-                    <option value="all">All sources</option>
-                    {sortedSources.map((source) => (
-                      <option key={source.key} value={source.key}>
-                        {source.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              )}
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => void refreshAll()}
+                  disabled={sourcesLoading || historyLoading}
+                  className="rounded-full border border-[color:var(--line)] bg-[color:var(--surface)] px-4 py-2 text-sm font-semibold text-[color:var(--fg)] hover:border-[color:var(--accent2)] disabled:opacity-60"
+                >
+                  {sourcesLoading || historyLoading ? "Refreshing…" : "Refresh"}
+                </button>
+                {sources && sortedSources && sortedSources.length > 0 && (
+                  <label className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
+                    Filter
+                    <select
+                      value={filterKey}
+                      onChange={(event) => setFilterKey(event.target.value)}
+                      className="rounded-md border border-[color:var(--line)] bg-[color:var(--surface)] px-2 py-1 text-sm text-[color:var(--fg)]"
+                    >
+                      <option value="all">All sources</option>
+                      {sortedSources.map((source) => (
+                        <option key={source.key} value={source.key}>
+                          {source.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
+              </div>
             </div>
 
-            {history === undefined ? (
+            <p className="mb-4 text-xs text-[color:var(--muted)]">
+              This page loads a snapshot on open and does not stay subscribed to
+              live updates. Use Refresh after a poll cycle if you want newer data.
+            </p>
+
+            {history === undefined || historyLoading ? (
               <p className="text-sm text-[color:var(--muted)]">Loading history…</p>
             ) : history.length === 0 ? (
               <p className="text-sm text-[color:var(--muted)]">
