@@ -13,7 +13,27 @@ Built as an exercise to try out Astro which I haven't used in years. Astro 7 was
 
 All those users **will** call the Convex backend queries as this is currently built. That is the next bottleneck. My aim is to push the Convex Free Tier as far as I can go. Each Convex browser client maintains a Websocket for live DB updates and there's a hard cap at 1,000 concurrent, as well as a limit of 1,000,000 queries. There's 3 queries in the current home page (Status, Sources and News Feed) so those could be collapsed into a single query but that's not a big win. I plan to use a better load-tester that runs "real" browser clients and Javascript to explore how things behave at the limit. One thing I'm definitely *not* concerned with is the [ismitchmcconnella.live/sources/](https://ismitchmcconnella.live/sources/) page. I expect very little traffic there and would want to keep that live and simple. I _think_ that's fine.
 
-I have also forked the Convex backend and have been exploring how it works. I've stepped through a decent bit of their Tokio-based Rust backend and have started to get my head around Isolate, which is their V8 edge sandbox that runs the Javascript queries/functions. I might also try out hosting a local self-hosted Convex backend tuned specifically for this use-case to see if having greater control over their runtime gives me more options.
+I have also forked the Convex backend and have been exploring how it works. I've stepped through a decent bit of their Tokio-based Rust backend and have started to get my head around Isolate, which is their V8 edge sandbox that runs the Javascript queries/functions. I might also try out hosting a local self-hosted Convex backend tuned specifically for this use-case to see if having greater control over their runtime gives me more options..
+
+> ### 😬😬😬 It's never the bit you think it is
+> 
+> I was worried about the Convex concurrent connection limit, but before I got a chance to load test it the morning after writing the above I got a notice
+> from Convex that I'd exceeded my free-tier limits. I had exceeded my DB read limit of 1GB with 3.5GB of reads overnight. It was all fetching the historical
+> output of the data source pollers. The [/sources](https://ismitchmcconnella.live/sources) page shows a list of recent data from the data sources. It's reactive
+> and Convexy like I wanted and the astute reader may recall I specifically said I wasn't worried about it just 2 paragraphs above. The query function did paging
+> but read 100 rows at once. That query gets invalidated every time a data source writes to the pollSnapshots table. Every 15 minutes we kick off all 5 of them
+> so there's 5 updates in a row all within a second or two. Not great, but still that shouldn't be *that* bad.
+>
+> It turned out I store the response from each API/data source in the snapshot. No biggie. Well the congressional API response is decently big around 15K. But the
+> winner is wikidata with 150K (😳) of super-enterprisey XML nonsense. There's a lot of good structured data in there, but each property is wrapeed in thousands of bytes
+> of exactly-the-same boilerplate XML. So that's around a hundred queries overnight for an open browser on that page and I had a few of them, each one pulling down
+> something like 5-10 megabytes of historical data that's never looked at nor rendered in the browser. And the table grows with each poll so it's exponential
+>
+> So my point above was yet another data point on why premature optimization *never* works out. You don't actually know what's using you're resources. Don't worry.
+> It happens to a lot of guys.
+>
+> Recent commits only store the wikidata payload parts that are relevant. I also batched up the mutations to store all the data source reads at once but that was 
+> before I knew the real problem
 
 ### SEO Experience
 
@@ -221,4 +241,3 @@ PostHog tracks these custom events (see [`src/lib/analytics.ts`](./src/lib/analy
 
 This is an **unofficial status tracker**. It is not medical information, not an official government source, and not affiliated with Senator Mitch McConnell, his office, any campaign, or any political party.
 
-Built by **[Lindale Labs, LLC](https://lindale.tech)** · [Source on GitHub](https://github.com/chrisyerga/mitch-dot-live)
