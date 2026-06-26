@@ -1,16 +1,9 @@
-import { ConvexProvider, ConvexReactClient } from "convex/react";
 import type { ReactNode } from "react";
-
-const convexUrl = import.meta.env.PUBLIC_CONVEX_URL;
-
-if (!convexUrl) {
-  throw new Error("PUBLIC_CONVEX_URL is not set");
-}
-
-const convex = new ConvexReactClient(convexUrl);
+import { ConvexProvider } from "convex/react";
+import { convexClient } from "../lib/convexClient";
 
 export function ConvexClientProvider({ children }: { children: ReactNode }) {
-  return <ConvexProvider client={convex}>{children}</ConvexProvider>;
+  return <ConvexProvider client={convexClient}>{children}</ConvexProvider>;
 }
 
-export { convex };
+export { convexClient as convex };

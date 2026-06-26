@@ -1,10 +1,10 @@
-import { useConvex } from "convex/react";
 import type {
   FunctionArgs,
   FunctionReference,
   FunctionReturnType,
 } from "convex/server";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { convexClient } from "./convexClient";
 
 function serializeArgs(args: unknown): string {
   if (args === "skip") {
@@ -26,11 +26,12 @@ export function usePointInTimeQuery<Query extends FunctionReference<"query">>(
   isRefreshing: boolean;
   refresh: () => Promise<void>;
 } {
-  const convex = useConvex();
   const [data, setData] = useState<FunctionReturnType<Query> | undefined>();
   const [isLoading, setIsLoading] = useState(args !== "skip");
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const queryRef = useRef(query);
   const argsRef = useRef(args);
+  queryRef.current = query;
   argsRef.current = args;
   const serializedArgs = serializeArgs(args);
 
@@ -43,7 +44,7 @@ export function usePointInTimeQuery<Query extends FunctionReference<"query">>(
     let cancelled = false;
     setIsLoading((current) => current || data === undefined);
 
-    void convex.query(query, args).then((result) => {
+    void convexClient.query(query, args).then((result) => {
       if (cancelled) {
         return;
       }
@@ -54,8 +55,9 @@ export function usePointInTimeQuery<Query extends FunctionReference<"query">>(
     return () => {
       cancelled = true;
     };
-    // `data` intentionally omitted — only refetch when the query or args change.
-  }, [convex, query, serializedArgs]);
+    // Fetch once per serialized args. Query refs are stable; do not add them here.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- serializedArgs only
+  }, [serializedArgs]);
 
   const refresh = useCallback(async () => {
     const currentArgs = argsRef.current;
@@ -65,12 +67,12 @@ export function usePointInTimeQuery<Query extends FunctionReference<"query">>(
 
     setIsRefreshing(true);
     try {
-      const result = await convex.query(query, currentArgs);
+      const result = await convexClient.query(queryRef.current, currentArgs);
       setData(result);
     } finally {
       setIsRefreshing(false);
     }
-  }, [convex, query]);
+  }, []);
 
   return { data, isLoading, isRefreshing, refresh };
 }
