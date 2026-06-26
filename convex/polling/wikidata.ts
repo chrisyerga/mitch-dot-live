@@ -47,6 +47,37 @@ function formatWikidataTime(time: string): string {
   return `${match[1].replace(/^\+/, "")}-${match[2]}-${match[3]}`;
 }
 
+export function buildCompactWikidataPayload(
+  entityId: string,
+  parsedStatus: ParsedStatus,
+  detail: string,
+): string {
+  return JSON.stringify({ entityId, parsedStatus, detail });
+}
+
+export function buildFullWikidataPayload(
+  entityId: string,
+  claims: WikidataClaims | undefined,
+): string {
+  return JSON.stringify({ entityId, claims: claims ?? {} });
+}
+
+export function parseEntityIdFromWikidataPayload(payload: string): string {
+  try {
+    const parsed = JSON.parse(payload) as { entityId?: string };
+    if (typeof parsed.entityId === "string" && parsed.entityId.length > 0) {
+      return parsed.entityId;
+    }
+  } catch {
+    // fall through
+  }
+  return "Q355522";
+}
+
+export function wikidataPayloadHasFullClaims(payload: string): boolean {
+  return payload.includes('"claims"');
+}
+
 export function parseDeathStatus(
   claims: WikidataClaims | undefined,
   deathProperty = "P570",
@@ -112,7 +143,14 @@ export async function fetchWikidataEntity(
   }
 
   const parsed = parseDeathStatus(entity.claims);
-  const rawPayload = JSON.stringify({ entityId, claims: entity.claims ?? {} });
+  const rawPayload =
+    parsed.parsedStatus === "deceased"
+      ? buildFullWikidataPayload(entityId, entity.claims)
+      : buildCompactWikidataPayload(
+          entityId,
+          parsed.parsedStatus,
+          parsed.detail,
+        );
 
   return {
     ...parsed,

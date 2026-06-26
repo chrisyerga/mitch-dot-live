@@ -15,6 +15,7 @@ import type * as init from "../init.js";
 import type * as lib_auth from "../lib/auth.js";
 import type * as lib_pollStatus from "../lib/pollStatus.js";
 import type * as lib_seedDataSources from "../lib/seedDataSources.js";
+import type * as migrations_trimWikidataPayloads from "../migrations/trimWikidataPayloads.js";
 import type * as news from "../news.js";
 import type * as pollSnapshots from "../pollSnapshots.js";
 import type * as polling_congressGov from "../polling/congressGov.js";
@@ -42,6 +43,7 @@ declare const fullApi: ApiFromModules<{
   "lib/auth": typeof lib_auth;
   "lib/pollStatus": typeof lib_pollStatus;
   "lib/seedDataSources": typeof lib_seedDataSources;
+  "migrations/trimWikidataPayloads": typeof migrations_trimWikidataPayloads;
   news: typeof news;
   pollSnapshots: typeof pollSnapshots;
   "polling/congressGov": typeof polling_congressGov;

@@ -125,3 +125,14 @@ Optional Convex environment variables for data source pollers:
 - `CONGRESS_GOV_API_KEY` — [Congress.gov API](https://api.congress.gov/) key for the Congress.gov source
 
 The X (Twitter) trends source is disabled (`enabled: false` in seed) to avoid pay-per-use search costs. Re-run `npx convex run init:seed --prod` after deploy to sync the flag in production.
+
+### One-time: trim old Wikidata snapshot payloads
+
+After deploying compact Wikidata payloads, shrink existing `pollSnapshots` rows (skips `deceased` rows that keep full claims):
+
+```bash
+npx convex run migrations/trimWikidataPayloads:runAll
+npx convex run migrations/trimWikidataPayloads:runAll --prod
+```
+
+This schedules batched patches (50 rows at a time). Watch the Convex dashboard logs until batches finish.
