@@ -1,8 +1,9 @@
-import { paginationOptsValidator } from "convex/server";
 import { query } from "./_generated/server";
 import { v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
 import { parsedStatusValidator } from "./lib/pollStatus";
+
+export const MAX_RECENT_SNAPSHOTS = 20;
 
 const pollSnapshotReturnValidator = v.object({
   _id: v.id("pollSnapshots"),
@@ -40,31 +41,29 @@ function toPollSnapshotReturn(snapshot: {
 export const listRecent = query({
   args: {
     dataSourceKey: v.optional(v.string()),
-    paginationOpts: paginationOptsValidator,
+    limit: v.optional(v.number()),
   },
-  returns: v.object({
-    page: v.array(pollSnapshotReturnValidator),
-    isDone: v.boolean(),
-    continueCursor: v.union(v.string(), v.null()),
-  }),
+  returns: v.array(pollSnapshotReturnValidator),
   handler: async (ctx, args) => {
-    const results = args.dataSourceKey
+    const limit = Math.max(
+      1,
+      Math.min(args.limit ?? MAX_RECENT_SNAPSHOTS, MAX_RECENT_SNAPSHOTS),
+    );
+
+    const snapshots = args.dataSourceKey
       ? await ctx.db
           .query("pollSnapshots")
           .withIndex("by_data_source_and_time", (q) =>
             q.eq("dataSourceKey", args.dataSourceKey!),
           )
           .order("desc")
-          .paginate(args.paginationOpts)
+          .take(limit)
       : await ctx.db
           .query("pollSnapshots")
+          .withIndex("by_fetched_at")
           .order("desc")
-          .paginate(args.paginationOpts);
+          .take(limit);
 
-    return {
-      page: results.page.map(toPollSnapshotReturn),
-      isDone: results.isDone,
-      continueCursor: results.continueCursor,
-    };
+    return snapshots.map(toPollSnapshotReturn);
   },
 });

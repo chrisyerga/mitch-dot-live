@@ -1,0 +1,12 @@
+config:
+  target: "https://ismitchmcconnella.live"
+  phases:
+    - duration: 60       # Run test for 60 seconds
+      arrivalRate: 5     # Spawn 5 new virtual browsers every second
+  engines:
+    playwright: {}       # Enable Playwright browser engine
+  processor: "./load-test.js" # Path to your JavaScript file
+
+scenarios:
+  - engine: playwright
+    flowFunction: "loadTestScenario" # Matches the exported JS function name

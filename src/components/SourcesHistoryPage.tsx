@@ -1,4 +1,4 @@
-import { usePaginatedQuery, useQuery } from "convex/react";
+import { useQuery } from "convex/react";
 import { useState } from "react";
 import { api } from "../../convex/_generated/api";
 import { ConvexClientProvider } from "./ConvexClientProvider";
@@ -31,10 +31,9 @@ function SourcesHistoryInner() {
     ? [...sources].sort((a, b) => b.confidence - a.confidence)
     : sources;
   const [filterKey, setFilterKey] = useState<string>("all");
-  const { results, status, loadMore } = usePaginatedQuery(
+  const history = useQuery(
     api.pollSnapshots.listRecent,
-    filterKey === "all" ? {} : { dataSourceKey: filterKey },
-    { initialNumItems: 25 },
+    filterKey === "all" ? { limit: 20 } : { dataSourceKey: filterKey, limit: 20 },
   );
 
   return (
@@ -178,14 +177,18 @@ function SourcesHistoryInner() {
               )}
             </div>
 
-            {results === undefined ? (
+            {history === undefined ? (
               <p className="text-sm text-[color:var(--muted)]">Loading history…</p>
-            ) : results.length === 0 ? (
+            ) : history.length === 0 ? (
               <p className="text-sm text-[color:var(--muted)]">
                 No poll snapshots recorded yet.
               </p>
             ) : (
               <>
+                <p className="mb-3 text-xs text-[color:var(--muted)]">
+                  Showing the {history.length} most recent checks
+                  {filterKey === "all" ? " across all sources" : ""}.
+                </p>
                 <div className="overflow-x-auto rounded-xl border border-[color:var(--line)] bg-[color:var(--surface)]/60">
                   <table className="data-sources-table w-full min-w-[720px] border-collapse text-sm">
                     <thead>
@@ -205,7 +208,7 @@ function SourcesHistoryInner() {
                       </tr>
                     </thead>
                     <tbody>
-                      {results.map((snapshot) => {
+                      {history.map((snapshot) => {
                         const tone = parsedStatusTone(snapshot.parsedStatus);
                         return (
                           <tr
@@ -244,23 +247,6 @@ function SourcesHistoryInner() {
                     </tbody>
                   </table>
                 </div>
-
-                {status === "CanLoadMore" && (
-                  <div className="mt-4 text-center">
-                    <button
-                      type="button"
-                      onClick={() => loadMore(25)}
-                      className="rounded-full border border-[color:var(--line)] bg-[color:var(--surface)] px-4 py-2 text-sm font-semibold text-[color:var(--fg)] hover:border-[color:var(--accent2)]"
-                    >
-                      Load more
-                    </button>
-                  </div>
-                )}
-                {status === "LoadingMore" && (
-                  <p className="mt-4 text-center text-sm text-[color:var(--muted)]">
-                    Loading more…
-                  </p>
-                )}
               </>
             )}
           </section>

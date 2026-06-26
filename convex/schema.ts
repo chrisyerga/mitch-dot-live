@@ -52,7 +52,8 @@ export default defineSchema({
     parsedStatus: parsedStatusValidator,
     checkOk: v.boolean(),
     error: v.optional(v.string()),
-  }).index("by_data_source_and_time", ["dataSourceKey", "fetchedAt"]),
+  }).index("by_data_source_and_time", ["dataSourceKey", "fetchedAt"])
+    .index("by_fetched_at", ["fetchedAt"]),
 
   editorialPosts: defineTable({
     title: v.string(),
