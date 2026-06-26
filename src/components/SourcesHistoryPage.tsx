@@ -3,7 +3,7 @@ import { api } from "../../convex/_generated/api";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { SiteHeader } from "./SiteHeader";
 import { formatCheckedAt } from "../lib/format";
-import { usePointInTimeQuery } from "../lib/usePointInTimeQuery";
+import { usePointInTimeQuery, EMPTY_QUERY_ARGS } from "../lib/usePointInTimeQuery";
 import {
   confidenceTone,
   formatAnswerDetail,
@@ -29,8 +29,9 @@ function SourcesHistoryInner() {
   const {
     data: sources,
     isLoading: sourcesLoading,
+    isRefreshing: sourcesRefreshing,
     refresh: refreshSources,
-  } = usePointInTimeQuery(api.dataSources.list, useMemo(() => ({}), []));
+  } = usePointInTimeQuery(api.dataSources.list, EMPTY_QUERY_ARGS);
   const sortedSources = sources
     ? [...sources].sort((a, b) => b.confidence - a.confidence)
     : sources;
@@ -43,6 +44,7 @@ function SourcesHistoryInner() {
   const {
     data: history,
     isLoading: historyLoading,
+    isRefreshing: historyRefreshing,
     refresh: refreshHistory,
   } = usePointInTimeQuery(api.pollSnapshots.listRecent, historyArgs);
 
@@ -77,7 +79,7 @@ function SourcesHistoryInner() {
             <h2 className="m-0 mb-4 text-lg font-semibold text-[color:var(--fg)]">
               Current readings
             </h2>
-            {sortedSources === undefined || sourcesLoading ? (
+            {sources === undefined && sourcesLoading ? (
               <p className="text-sm text-[color:var(--muted)]">Loading sources…</p>
             ) : sortedSources.length === 0 ? (
               <p className="text-sm text-[color:var(--muted)]">No data sources yet.</p>
@@ -176,10 +178,10 @@ function SourcesHistoryInner() {
                 <button
                   type="button"
                   onClick={() => void refreshAll()}
-                  disabled={sourcesLoading || historyLoading}
+                  disabled={sourcesRefreshing || historyRefreshing}
                   className="rounded-full border border-[color:var(--line)] bg-[color:var(--surface)] px-4 py-2 text-sm font-semibold text-[color:var(--fg)] hover:border-[color:var(--accent2)] disabled:opacity-60"
                 >
-                  {sourcesLoading || historyLoading ? "Refreshing…" : "Refresh"}
+                  {sourcesRefreshing || historyRefreshing ? "Refreshing…" : "Refresh"}
                 </button>
                 {sources && sortedSources && sortedSources.length > 0 && (
                   <label className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
@@ -206,7 +208,7 @@ function SourcesHistoryInner() {
               live updates. Use Refresh after a poll cycle if you want newer data.
             </p>
 
-            {history === undefined || historyLoading ? (
+            {history === undefined && historyLoading ? (
               <p className="text-sm text-[color:var(--muted)]">Loading history…</p>
             ) : history.length === 0 ? (
               <p className="text-sm text-[color:var(--muted)]">

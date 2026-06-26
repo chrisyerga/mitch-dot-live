@@ -4,7 +4,14 @@ import type {
   FunctionReference,
   FunctionReturnType,
 } from "convex/server";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+function serializeArgs(args: unknown): string {
+  if (args === "skip") {
+    return "skip";
+  }
+  return JSON.stringify(args);
+}
 
 /**
  * One-shot Convex read with no live subscription. Use for low-churn pages where
@@ -16,29 +23,57 @@ export function usePointInTimeQuery<Query extends FunctionReference<"query">>(
 ): {
   data: FunctionReturnType<Query> | undefined;
   isLoading: boolean;
+  isRefreshing: boolean;
   refresh: () => Promise<void>;
 } {
   const convex = useConvex();
   const [data, setData] = useState<FunctionReturnType<Query> | undefined>();
   const [isLoading, setIsLoading] = useState(args !== "skip");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const argsRef = useRef(args);
+  argsRef.current = args;
+  const serializedArgs = serializeArgs(args);
 
-  const refresh = useCallback(async () => {
+  useEffect(() => {
     if (args === "skip") {
+      setIsLoading(false);
       return;
     }
 
-    setIsLoading(true);
+    let cancelled = false;
+    setIsLoading((current) => current || data === undefined);
+
+    void convex.query(query, args).then((result) => {
+      if (cancelled) {
+        return;
+      }
+      setData(result);
+      setIsLoading(false);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+    // `data` intentionally omitted — only refetch when the query or args change.
+  }, [convex, query, serializedArgs]);
+
+  const refresh = useCallback(async () => {
+    const currentArgs = argsRef.current;
+    if (currentArgs === "skip") {
+      return;
+    }
+
+    setIsRefreshing(true);
     try {
-      const result = await convex.query(query, args);
+      const result = await convex.query(query, currentArgs);
       setData(result);
     } finally {
-      setIsLoading(false);
+      setIsRefreshing(false);
     }
-  }, [convex, query, args]);
+  }, [convex, query]);
 
-  useEffect(() => {
-    void refresh();
-  }, [refresh]);
-
-  return { data, isLoading, refresh };
+  return { data, isLoading, isRefreshing, refresh };
 }
+
+/** Stable empty args object for queries that take `{}`. */
+export const EMPTY_QUERY_ARGS = {} as const;
