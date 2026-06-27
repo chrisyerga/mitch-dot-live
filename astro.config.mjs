@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
@@ -22,6 +23,17 @@ export default defineConfig({
   ],
 
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      tailwindcss(),
+      visualizer({
+        filename: 'stats.html',
+        open: true, // Opens the visualizer automatically after build
+        gzipSize: true,
+      })
+    ],
   },
 });
+
+
+
+

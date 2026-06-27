@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "artillery": "^2.0.33",
-    "artillery-engine-playwright": "^1.30.0"
+    "artillery-engine-playwright": "^1.30.0",
+    "rollup-plugin-visualizer": "^7.0.1"
   }
 }
