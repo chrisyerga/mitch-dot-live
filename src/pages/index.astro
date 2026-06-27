@@ -37,7 +37,14 @@ if (initialStatus && asOf) {
 }
 ---
 
-<BaseLayout title={SITE.title} description={description}>
+<BaseLayout title={SITE.title} description={description} statusAlive={initialStatus?.isAlive ?? true}>
+  <img
+    id="favicon-debug-preview"
+    alt="Favicon canvas debug preview"
+    width="256"
+    height="256"
+    style="position: fixed; bottom: 16px; right: 16px; z-index: 9999; border: 2px solid #0a3161; background: #fff; image-rendering: pixelated;"
+  />
   <SiteShell
     client:load
     initialStatus={initialStatus}

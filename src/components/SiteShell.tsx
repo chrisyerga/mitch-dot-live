@@ -3,6 +3,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { StatusData } from "../lib/status";
 import { captureEvent } from "../lib/analytics";
+import { FAVICON_STATUS_EVENT } from "../lib/animatedFavicon";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { ThemeDecorations } from "./ThemeDecorations";
 import { SiteHeader } from "./SiteHeader";
@@ -75,6 +76,11 @@ function SiteShellInner({ initialStatus }: { initialStatus: StatusData }) {
   useEffect(() => {
     if (status) {
       captureEvent("status_viewed", { isAlive: status.isAlive });
+      window.dispatchEvent(
+        new CustomEvent(FAVICON_STATUS_EVENT, {
+          detail: { isAlive: status.isAlive },
+        }),
+      );
     }
   }, [status?.isAlive]);
 

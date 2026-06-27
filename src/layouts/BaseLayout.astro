@@ -10,6 +10,7 @@ interface Props {
   description?: string;
   image?: string;
   noindex?: boolean;
+  statusAlive?: boolean;
 }
 
 const {
@@ -17,6 +18,7 @@ const {
   description = SITE.description,
   image = SITE.ogImage,
   noindex = false,
+  statusAlive,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -106,6 +108,10 @@ const structuredData = noindex
 
     <meta name="theme-color" content="#0a3161" />
 
+    {statusAlive !== undefined && (
+      <meta name="mitch-status-alive" content={statusAlive ? "true" : "false"} />
+    )}
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -132,5 +138,10 @@ const structuredData = noindex
   </head>
   <body>
     <slot />
+    {statusAlive !== undefined && (
+      <script>
+        import "../scripts/animated-favicon.ts";
+      </script>
+    )}
   </body>
 </html>
