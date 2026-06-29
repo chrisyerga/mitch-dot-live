@@ -26,7 +26,7 @@ type EditorialApiPost = {
 export function editorialConvexLoader(): Loader {
   return {
     name: "editorial-convex-loader",
-    load: async ({ store, parseData, logger }) => {
+    load: async ({ store, parseData, renderMarkdown, logger }) => {
       store.clear();
 
       const convexUrl = import.meta.env.PUBLIC_CONVEX_URL;
@@ -61,6 +61,7 @@ export function editorialConvexLoader(): Loader {
             id: post.slug,
             data,
             body: post.body,
+            rendered: await renderMarkdown(post.body),
           });
         }
       } catch (error) {
