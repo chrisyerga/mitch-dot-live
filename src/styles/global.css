@@ -692,6 +692,40 @@ body {
   color: white;
 }
 
+.admin-topbar {
+  color: #e8e8ea;
+}
+
+.admin-nav {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-nav-link {
+  display: inline-block;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(232, 232, 234, 0.55);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.admin-nav-link:hover {
+  color: rgba(232, 232, 234, 0.9);
+}
+
+.admin-nav-link-active {
+  color: #e8e8ea;
+  border-bottom-color: #4a6fa5;
+}
+
 /* ── Keyframes ── */
 @keyframes blink {
   0%,

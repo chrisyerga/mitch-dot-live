@@ -61,7 +61,7 @@ function SiteFooter() {
           </a>
         </div>
         <p className="m-0 mt-1 text-[12.5px] text-[color:var(--muted)]">
-          <a href="/admin" className="text-[color:var(--accent2)] hover:underline">
+          <a href="/admin/status/" className="text-[color:var(--accent2)] hover:underline">
             Admin
           </a>
         </p>

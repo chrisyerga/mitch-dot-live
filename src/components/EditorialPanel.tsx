@@ -115,7 +115,7 @@ export function EditorialPanel({
 
   return (
     <>
-      <section className="admin-card mt-8 rounded-2xl p-6">
+      <section className="admin-card rounded-2xl p-6">
         <h2 className="font-display text-2xl">
           {editingId ? "Edit editorial post" : "Add editorial post"}
         </h2>
@@ -252,7 +252,7 @@ export function EditorialPanel({
         </form>
       </section>
 
-      <section className="admin-card mt-8 rounded-2xl p-6">
+      <section className="admin-card rounded-2xl p-6">
         <h2 className="font-display text-2xl">Editorial posts</h2>
         {posts === undefined ? (
           <p className="mt-4 opacity-70">Loading…</p>
