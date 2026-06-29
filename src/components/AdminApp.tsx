@@ -1,5 +1,6 @@
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { AdminLogin } from "./admin/AdminLogin";
+import { AdminHoneypotPage } from "./admin/AdminHoneypotPage";
 import { AdminShell } from "./admin/AdminShell";
 import { AdminStatusPage } from "./admin/AdminStatusPage";
 import { AdminNewsPage } from "./admin/AdminNewsPage";
@@ -17,6 +18,10 @@ export function AdminApp({ section }: { section: AdminSection }) {
 
 function AdminAppInner({ section }: { section: AdminSection }) {
   const session = useAdminSession();
+
+  if (session.honeypotTriggered) {
+    return <AdminHoneypotPage />;
+  }
 
   if (!session.token) {
     return (

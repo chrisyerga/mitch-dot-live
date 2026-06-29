@@ -6,11 +6,13 @@ import {
   getStoredAdminToken,
   setStoredAdminToken,
 } from "../lib/adminSession";
+import { ADMIN_HONEYPOT_PASSWORD } from "../lib/adminHoneypot";
 
 export function useAdminSession() {
   const [token, setToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [honeypotTriggered, setHoneypotTriggered] = useState(false);
 
   const login = useMutation(api.admin.login);
   const logout = useMutation(api.admin.logout);
@@ -31,6 +33,12 @@ export function useAdminSession() {
 
   const handleLogin = async (event: FormEvent, password: string) => {
     event.preventDefault();
+    if (password === ADMIN_HONEYPOT_PASSWORD) {
+      setHoneypotTriggered(true);
+      setError(null);
+      return;
+    }
+
     setBusy(true);
     setError(null);
     try {
@@ -58,6 +66,7 @@ export function useAdminSession() {
     setError,
     busy,
     setBusy,
+    honeypotTriggered,
     handleLogin,
     handleLogout,
   };
