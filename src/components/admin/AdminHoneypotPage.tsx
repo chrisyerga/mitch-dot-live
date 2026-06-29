@@ -10,7 +10,8 @@ export function AdminHoneypotPage() {
   }, [imageSrc]);
 
   return (
-    <div className="admin-shell mx-auto flex min-h-screen w-full max-w-lg flex-col items-center justify-center px-6 py-20 text-center">
+    <div className="admin-shell min-h-screen">
+      <div className="mx-auto flex w-full max-w-lg flex-col items-center justify-center px-6 py-20 text-center">
       <p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-300/80">
         Access granted
       </p>
@@ -40,6 +41,7 @@ export function AdminHoneypotPage() {
       <a href="/" className="admin-btn mt-10 inline-block rounded-lg px-6 py-2 no-underline">
         Back to the live tracker
       </a>
+      </div>
     </div>
   );
 }

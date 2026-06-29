@@ -23,6 +23,10 @@ function AdminAppInner({ section }: { section: AdminSection }) {
     return <AdminHoneypotPage />;
   }
 
+  if (session.booting) {
+    return <div className="admin-shell min-h-screen" aria-busy="true" />;
+  }
+
   if (!session.token) {
     return (
       <AdminLogin

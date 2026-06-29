@@ -1,8 +1,8 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import AdminLayout from "../../layouts/AdminLayout.astro";
 import { AdminApp } from "../../components/AdminApp";
 ---
 
-<BaseLayout title="Admin — Editorial" noindex>
+<AdminLayout title="Admin — Editorial">
   <AdminApp client:only="react" section="editorial" />
-</BaseLayout>
+</AdminLayout>

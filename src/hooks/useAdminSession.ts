@@ -9,7 +9,8 @@ import {
 import { ADMIN_HONEYPOT_PASSWORD } from "../lib/adminHoneypot";
 
 export function useAdminSession() {
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(() => getStoredAdminToken());
+  const [booting, setBooting] = useState(() => getStoredAdminToken() !== null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [honeypotTriggered, setHoneypotTriggered] = useState(false);
@@ -20,14 +21,20 @@ export function useAdminSession() {
 
   useEffect(() => {
     const stored = getStoredAdminToken();
-    if (!stored) return;
+    if (!stored) {
+      setBooting(false);
+      return;
+    }
 
     void validateSession({ token: stored }).then((valid) => {
       if (valid) {
         setToken(stored);
       } else {
         clearStoredAdminToken();
+        setToken(null);
       }
+    }).finally(() => {
+      setBooting(false);
     });
   }, [validateSession]);
 
@@ -62,6 +69,7 @@ export function useAdminSession() {
 
   return {
     token,
+    booting,
     error,
     setError,
     busy,

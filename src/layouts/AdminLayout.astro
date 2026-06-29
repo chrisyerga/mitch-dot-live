@@ -1,0 +1,53 @@
+---
+import { ClientRouter } from "astro:transitions";
+import "../styles/global.css";
+import PostHog from "../components/posthog.astro";
+import { SITE } from "../lib/site";
+
+interface Props {
+  title?: string;
+}
+
+const { title = "Admin" } = Astro.props;
+const pageTitle = `${title} | ${SITE.name}`;
+---
+
+<!doctype html>
+<html lang="en" class="admin-page">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{pageTitle}</title>
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+
+    <meta name="theme-color" content="#12141a" />
+    <meta name="color-scheme" content="dark" />
+
+    <!-- Paint admin chrome before CSS/React hydrate -->
+    <style is:inline>
+      html.admin-page,
+      body.admin-page {
+        background: #12141a;
+        color: #e8e8ea;
+      }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&display=swap"
+      rel="stylesheet"
+    />
+
+    <PostHog />
+    <ClientRouter />
+  </head>
+  <body class="admin-page">
+    <slot />
+  </body>
+</html>

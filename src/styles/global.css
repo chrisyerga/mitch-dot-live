@@ -664,6 +664,12 @@ body {
 }
 
 /* ── Admin (unchanged dark panel) ── */
+html.admin-page,
+body.admin-page {
+  background: #12141a;
+  color: #e8e8ea;
+}
+
 .admin-shell {
   color: #e8e8ea;
   min-height: 100vh;

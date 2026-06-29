@@ -12,7 +12,8 @@ export function AdminLogin({
   const [password, setPassword] = useState("");
 
   return (
-    <div className="admin-shell mx-auto w-full max-w-md px-6 py-20">
+    <div className="admin-shell min-h-screen">
+      <div className="mx-auto w-full max-w-md px-6 py-20">
       <h1 className="font-display text-4xl">Admin</h1>
       <p className="mt-3 opacity-80">Sign in to manage status, news links, and editorial posts.</p>
       <form
@@ -37,6 +38,7 @@ export function AdminLogin({
           {busy ? "Signing in…" : "Sign in"}
         </button>
       </form>
+      </div>
     </div>
   );
 }
