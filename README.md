@@ -9,7 +9,8 @@ An unofficial, non-partisan status tracker that answers one question in giant le
 
 ### Maximum Value from a $6/mo VPS and the Convex Free Tier
 
-Built as an exercise to try out Astro which I haven't used in years. Astro 7 was just released with Vite 8 so I used both for this. No Astro 7 functionality is used, just the speedy new Astro Build and the perf improvements in the already-zippy Vite. The idea was a website that would get either a few hits per day or a thousand per second, and could sustain that while still doing interesting work. I'm hosting this on a $6/mo shared VPS on Digital Ocean and a Convex free-tier backend. It typically serves the main site page in under 100ms. It *does* use Astro React Islands for the one stateful part of the page, so there are subsequent fetches but the Lighthouse scores show 300ms. Naive load testing from my laptop shows the p90 response time stays under 1 second up to about 250rps.
+Built as an exercise to try out Astro which I haven't used in years. Astro 7 was just released with Vite 8 so I used both for this. No Astro 7 functionality is used, just the speedy new Astro Build and the perf improvements in the already-zippy Vite. The idea was a website that would get either a few hits per day or a thousand per second, and could sustain that while still doing interesting work. I'm hosting this on a $6/mo shared VPS on Digital Ocean and a Convex free-tier backend. It typically serves the main site page in under 100ms. It *does* use Astro React Islands for the one stateful part of the page
+, so there are subsequent fetches but the Lighthouse scores show 300ms. Naive load testing from my laptop shows the p90 response time stays under 1 second up to about 250rps.
 
 All those users **will** call the Convex backend queries as this is currently built. That is the next bottleneck. My aim is to push the Convex Free Tier as far as I can go. Each Convex browser client maintains a Websocket for live DB updates and there's a hard cap at 1,000 concurrent, as well as a limit of 1,000,000 queries. There's 3 queries in the current home page (Status, Sources and News Feed) so those could be collapsed into a single query but that's not a big win. I plan to use a better load-tester that runs "real" browser clients and Javascript to explore how things behave at the limit. One thing I'm definitely *not* concerned with is the [ismitchmcconnella.live/sources/](https://ismitchmcconnella.live/sources/) page. I expect very little traffic there and would want to keep that live and simple. I _think_ that's fine.
 
@@ -35,13 +36,32 @@ I have also forked the Convex backend and have been exploring how it works. I've
 > Recent commits only store the wikidata payload parts that are relevant. I also batched up the mutations to store all the data source reads at once but that was 
 > before I knew the real problem
 
-### SEO Experience
+## SEO Experience
 
 This was also an exercise in SEO and web app analytics, which is why it has Posthog integrated. Astro is an excellent choice for that as well and this repo does its best (as far as my naïve knowledge goes) to optimize not only page load and app responsiveness, but also SEO metas, OpenGraph metadata, etc. I've already ran into a few obvious issues. For example, the initial version of this failed to provide an actual answer to crawlers because the SSR simply said "Loading..." unless Javascript was running on the client. This is now handled in src/pages/index.astro which performs the Convex query at ```npx astro build``` time and bakes ```initialStatus``` into the static Atro/VITE build of the site. For a situation such as this where there is but a single transition from YES->NO that's reasonable. Arguably that could just be set to a const of YES but this approach felt more correct.
 
-The SEO results have been solid. The Google search "Is Mitch McConnell alive website" (you need the word website it there for now) shows this site as the #2 result right under his own congressional website. We're #7 on the second page without the word "website" in the query. I've done nothing to build backlinks and haven't done any research with Ahrefs or other tools so I'm sure there's plenty more that could be optimized. Interestingly, I chose what others considered the "misspelled" domain with the "a" in there before the .live TLD as the canonical URL that is crawled by search engines. It would be interesting to try another site for another celebrity with the alternative domain. I have 3 .live domains (for a grand total of $9) to catch what people would most likey type but the isXXXa.live URL is my preference.
+### Google Search Ranking
 
-I'm an engineer, not a content marketer. But I do know that "answer" sites like this are an interesting SEO challenge/opportunity. This particular one is unique in that its value and interest is entirely time-bounded so this site will disappear into obscurity after the Senator's passing. For the record, I am a Political moderate and have no interest in this particular politician one way or another. He was chosen solely because of his visibility and interest in his health and this all came together because a friend of mine asked the question...[ismitchmcconnella.live](https://ismitchmcconnella.live)
+<img src="https://lindale.atl1.cdn.digitaloceanspaces.com/google-search-position.jpg" width="80%">
+
+The SEO results have been surprisingly good. We are hovering around #8 in the relevant Google search results. If you specifically search for "Is Mitch McConnell alive website" (you need the word website it there) this site appears as the #2 result right under his own congressional website. I've done nothing to build backlinks and haven't done any research with Ahrefs or other tools so I'm sure there's plenty more that could be optimized.
+
+Regarding backlinks, there is a blog section that Astro builds from .MD files in the repo. There is also a section in the Admin panel to add a new blog entry and those too are Astro-built to static HTML for performance. Whenever the table with these dynamic blog entries changes, a Github action kicks off a new Astro build and deploy to achieve this. 
+
+The next feature I'm building is auto-generated blog posts to capture traffic on search keywords we're not yet hitting. I can see them in the Google Search Console, and have added some blog posts manually to capture traffic for things like "death certificate" etc. that aren't mentioned on the home page. The idea
+is to detect these automatically and generate search marketing content to capture traffic and perhaps also
+some SERP landscape.
+
+Interestingly, I chose what others considered the "misspelled" domain with the "a" in there before the .live TLD as the canonical URL that is crawled by search engines. It would be interesting to try another site for another celebrity with the alternative domain. I have 3 .live domains (for a grand total of $9) to catch what people would most likey type but the isXXXa.live URL is my preference.
+
+I'm an engineer, not a content marketer. But I do know that "answer" sites like this are an interesting SEO challenge/opportunity. This particular one is unique in a few ways:
+
+* There is absolutely no chance of me grabbing the SERP for "is mitch mcconnell alive" as far as I know. Presumably, Google uses Wikidata as the authoritative source for a public figure such as the Senator.
+  
+* Its value and interest is entirely time-bounded. This site will disappear into obscurity after the Senator's passing. For the record, I am a Political moderate and have no interest in this particular politician one way or another. He was chosen solely because of his visibility and interest in his health and this all came together because a friend of mine asked the question...[ismitchmcconnella.live](https://ismitchmcconnella.live)
+
+While the particular topic of Senator Mitch McConnell is not of any particular interest to me, this
+repo is intended to build up a library of useful code to automate content generation and SEO for sites like this.
 
 ### Data Sources
 
