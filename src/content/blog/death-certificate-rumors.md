@@ -11,7 +11,9 @@ tags:
 Rumors will grow to fill an information vacuum, and the rumor mill has been spreading online regarding
 Senator Mitch McConnell. The Senator was hospitalized over two weeks ago on June 14th, his second in 2026. His staff issued a terse statement that he was "recovering" would not be voting the week of June 22, but after that week passed there has been no update.
 
-Online speculation has been rampant with reports by widely-followed independent journalists like [The David Packman Show](https://www.facebook.com/reel/2489465774885586) reporting on the growing number of reports. No credible sources or new information has become available, so there's not much to report on aside from the rumors themselves.
+Online speculation has been rampant with reports by widely-followed independent journalists like [Aaron Parnas](https://www.tiktok.com/@aaronparnas1), [The David Packman Show](https://www.facebook.com/reel/2489465774885586) and [Epistemic](https://www.tiktok.com/@epistemiccrisis) have been reporting on the rumors. No credible sources or new information has become available, so there's not much to report on aside from the rumors themselves.
+
+It's a unique time in media, where independent journalists frequently scoop the news long before legacy media even notices. As more Americans realize how highly filtered major media reporting is, these outlets are a more timely (if not completely objective) source of information. We monitor these feeds ourselves, but our scoring algorithm requires a high degree of certainty before we flip the front page from YES to NO. Having said that, when our automated systems identify breaking news the site status will display MAYBE and details on the breaking news will be provided.
 
 ## Death Certificate & False Motivations
 
