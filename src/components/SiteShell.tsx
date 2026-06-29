@@ -27,7 +27,11 @@ function SiteFooter() {
           Independent, non-partisan status tracker. Not affiliated with Senator McConnell,
           his office, or any campaign or party.
         </p>
-        <div className="mt-1 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[12.5px] text-[color:var(--muted)]">
+        <div class="mt-1 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[12.5px] text-[color:var(--muted)]">
+          <a href="/blog/" className="text-[color:var(--accent2)] hover:underline">
+            Blog
+          </a>
+          <span aria-hidden="true">·</span>
           <span>
             Built by{" "}
             <a

@@ -1,0 +1,92 @@
+---
+import { render } from "astro:content";
+import BlogLayout from "../../layouts/BlogLayout.astro";
+import BlogHomeCta from "../../components/BlogHomeCta.astro";
+import { getPublishedBlogPosts, formatBlogDate } from "../../lib/blog";
+import { getTagPillStyle } from "../../lib/tagPill";
+import type { BlogCollection } from "../../lib/blog";
+
+export async function getStaticPaths() {
+  const posts = await getPublishedBlogPosts();
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: {
+      collection: post.collection,
+      entryId: post.entry.id,
+      title: post.title,
+      description: post.description,
+      pubDate: post.pubDate,
+      updatedDate: post.updatedDate,
+      tags: post.tags,
+    },
+  }));
+}
+
+interface Props {
+  collection: BlogCollection;
+  entryId: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  tags?: string[];
+}
+
+const { collection, entryId, title, description, pubDate, updatedDate, tags } =
+  Astro.props;
+
+const slug = Astro.params.slug!;
+const { getEntry } = await import("astro:content");
+const entry = await getEntry(collection, entryId);
+
+if (!entry) {
+  throw new Error(`Blog post not found: ${collection}/${entryId}`);
+}
+
+const { Content } = await render(entry);
+---
+
+<BlogLayout
+  {title}
+  {description}
+  {pubDate}
+  {updatedDate}
+  {tags}
+  slug={slug}
+>
+  <article class="blog-article">
+    <BlogHomeCta />
+    <p class="blog-kicker">
+      <a href="/blog/" class="blog-back-link">Blog</a>
+      · {formatBlogDate(pubDate)}
+    </p>
+    <h1 class="blog-title">{title}</h1>
+    {tags && tags.length > 0 && (
+      <ul class="blog-tags" aria-label="Tags">
+        {tags.map((tag) => {
+          const pill = getTagPillStyle(tag);
+          return (
+            <li
+              class="blog-tag-pill"
+              style={{
+                backgroundColor: pill.backgroundColor,
+                color: pill.color,
+              }}
+            >
+              {tag}
+            </li>
+          );
+        })}
+      </ul>
+    )}
+    <div class="blog-prose">
+      <Content />
+    </div>
+    <footer class="blog-post-footer">
+      <p>
+        See the live answer on the <a href="/">homepage</a> or review
+        <a href="/sources/">polling source history</a>.
+      </p>
+    </footer>
+  </article>
+</BlogLayout>

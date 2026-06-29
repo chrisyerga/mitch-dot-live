@@ -1,0 +1,54 @@
+---
+import { SITE } from "../lib/site";
+
+interface Props {
+  activeNav?: "blog" | "sources";
+}
+
+const { activeNav = "blog" } = Astro.props;
+---
+
+<div class="blog-shell">
+  <header class="blog-header site-header">
+    <div class="blog-header-inner">
+      <a href="/" class="blog-brand">
+        <span class="site-header-dot" aria-hidden="true"></span>
+        <span class="blog-brand-text">{SITE.name}</span>
+      </a>
+      <nav class="blog-nav" aria-label="Site">
+        <a
+          href="/blog/"
+          class:list={["blog-nav-link", { "blog-nav-link-active": activeNav === "blog" }]}
+        >
+          Blog
+        </a>
+        <a
+          href="/sources/"
+          class:list={["blog-nav-link", { "blog-nav-link-active": activeNav === "sources" }]}
+        >
+          Sources
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="blog-main">
+    <slot />
+  </main>
+
+  <footer class="blog-footer site-footer">
+    <div class="blog-footer-inner">
+      <p class="blog-footer-note">
+        Independent, non-partisan status tracker. Not affiliated with Senator McConnell or his
+        office.
+      </p>
+      <p class="blog-footer-links">
+        <a href="/">Live status</a>
+        <span aria-hidden="true">·</span>
+        <a href="/blog/">Blog</a>
+        <span aria-hidden="true">·</span>
+        <a href="/sources/">Data sources</a>
+      </p>
+    </div>
+  </footer>
+</div>

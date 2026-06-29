@@ -10,6 +10,7 @@ import {
 } from "../lib/sourceConsensus";
 import { formatParsedStatusAnswer } from "../lib/pollDisplay";
 import { formatCheckedAt } from "../lib/format";
+import { EditorialPanel } from "./EditorialPanel";
 
 const SESSION_KEY = "adminSessionToken";
 
@@ -501,7 +502,7 @@ export function AdminPanel() {
     return (
       <div className="admin-shell mx-auto w-full max-w-md px-6 py-20">
         <h1 className="font-display text-4xl">Admin</h1>
-        <p className="mt-3 opacity-80">Sign in to manage status and news links.</p>
+        <p className="mt-3 opacity-80">Sign in to manage status, news links, and editorial posts.</p>
         <form onSubmit={handleLogin} className="admin-card mt-8 space-y-4 rounded-2xl p-6">
           <label className="block">
             <span className="font-mono text-xs uppercase tracking-[0.2em] opacity-70">
@@ -532,7 +533,7 @@ export function AdminPanel() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="font-display text-4xl">Admin</h1>
-          <p className="mt-2 opacity-80">Manage live status and curated news links.</p>
+          <p className="mt-2 opacity-80">Manage live status, news links, and editorial posts.</p>
         </div>
         <button type="button" onClick={handleLogout} className="admin-btn rounded-lg px-4 py-2">
           Sign out
@@ -733,6 +734,10 @@ export function AdminPanel() {
           </ul>
         )}
       </section>
+
+
+      <EditorialPanel token={token} onError={setError} />
+
     </div>
   );
 }

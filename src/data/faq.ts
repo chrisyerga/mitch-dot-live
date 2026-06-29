@@ -7,7 +7,7 @@ export const faqs = [
   {
     question: "How is the status verified?",
     answer:
-      "Multiple news outlets, official government data sources, and other structured records are checked automatically around the clock. High-confidence structured sources (Wikidata, Wikipedia, Congress.gov) can indicate alive when no death record exists. Wire outlets (AP, Reuters, and peers via Google News) only corroborate death when a recent headline is found — absence of a story is not proof someone is alive. Each source displays a confidence score from 0–100. The site will update to indicate when news is breaking and the data sources disagree, but a NO will only appear after human review and confirmation from multiple credible sources.",
+      "Multiple news outlets, official government data sources, and other structured records are checked automatically around the clock. High-confidence structured sources (Wikidata, Wikipedia, Congress.gov) can indicate alive when no death record exists. Wire outlets (AP, Reuters, and peers via Google News) only corroborate death when a recent headline is found — absence of a story is not proof someone is alive. Each source displays a confidence score from 0–100. The site will update to indicate when news is breaking and the data sources disagree, but a NO will only appear after human review and confirmation from multiple credible sources. See the blog post on how this tracker works for a plain-language walkthrough: /blog/how-this-tracker-works/",
   },
   {
     question: "Is this affiliated with the Senator or his office?",

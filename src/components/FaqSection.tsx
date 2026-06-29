@@ -1,6 +1,21 @@
 import { faqs } from "../data/faq";
 import { captureEvent } from "../lib/analytics";
 
+function linkifyAnswer(answer: string) {
+  const parts = answer.split(/(\/blog\/[a-z0-9-]+\/)/g);
+  if (parts.length === 1) return answer;
+
+  return parts.map((part, index) =>
+    part.startsWith("/blog/") ? (
+      <a key={index} href={part} className="text-[color:var(--accent2)] hover:underline">
+        how this tracker works
+      </a>
+    ) : (
+      part
+    ),
+  );
+}
+
 export function FaqSection() {
   return (
     <section id="faq" className="mx-auto max-w-[780px] px-6 py-11">
@@ -23,7 +38,7 @@ export function FaqSection() {
               +
             </span>
           </summary>
-          <div className="faq-answer">{faq.answer}</div>
+          <div className="faq-answer">{linkifyAnswer(faq.answer)}</div>
         </details>
       ))}
     </section>

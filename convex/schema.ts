@@ -58,8 +58,25 @@ export default defineSchema({
   editorialPosts: defineTable({
     title: v.string(),
     slug: v.string(),
+    description: v.string(),
     body: v.string(),
     publishedAt: v.number(),
+    updatedAt: v.optional(v.number()),
     isPublished: v.boolean(),
-  }).index("by_slug", ["slug"]),
+    status: v.union(v.literal("draft"), v.literal("published")),
+    source: v.union(v.literal("ai"), v.literal("manual")),
+    tags: v.optional(v.array(v.string())),
+    deployRequestedAt: v.optional(v.number()),
+    deployStatus: v.optional(
+      v.union(
+        v.literal("pending"),
+        v.literal("triggered"),
+        v.literal("failed"),
+      ),
+    ),
+    deployError: v.optional(v.string()),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_published", ["isPublished", "publishedAt"])
+    .index("by_status", ["status"]),
 });

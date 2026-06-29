@@ -11,6 +11,8 @@
 import type * as admin from "../admin.js";
 import type * as crons from "../crons.js";
 import type * as dataSources from "../dataSources.js";
+import type * as editorial from "../editorial.js";
+import type * as editorialDeploy from "../editorialDeploy.js";
 import type * as init from "../init.js";
 import type * as lib_auth from "../lib/auth.js";
 import type * as lib_pollStatus from "../lib/pollStatus.js";
@@ -39,6 +41,8 @@ declare const fullApi: ApiFromModules<{
   admin: typeof admin;
   crons: typeof crons;
   dataSources: typeof dataSources;
+  editorial: typeof editorial;
+  editorialDeploy: typeof editorialDeploy;
   init: typeof init;
   "lib/auth": typeof lib_auth;
   "lib/pollStatus": typeof lib_pollStatus;
