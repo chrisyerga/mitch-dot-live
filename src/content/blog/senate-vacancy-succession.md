@@ -1,7 +1,7 @@
 ---
 title: "How Senate vacancy succession works"
 description: "When a U.S. senator dies or resigns, state law and party politics determine what happens next — including Mitch McConnell's Kentucky seat."
-pubDate: 2024-06-15
+pubDate: 2026-06-27
 tags:
   - senate
   - succession

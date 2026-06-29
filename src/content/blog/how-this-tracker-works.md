@@ -1,7 +1,7 @@
 ---
 title: "What this Mitch McConnell status tracker checks"
 description: "A plain-language guide to the data sources, confidence scores, and MAYBE state used on ismitchmcconnella.live."
-pubDate: 2024-07-01
+pubDate: 2026-06-20
 tags:
   - tracker
   - reliability
