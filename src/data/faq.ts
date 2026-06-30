@@ -23,5 +23,9 @@ export const faqs = [
     question: "Why are you celebrating a man's death?",
     answer:
       "The default presentation is a factual status indicator, presented plainly. We wish the Senator good health at home with his family where he belongs. Users can opt to celebrate either status with kitties, flowers and rainbows. That part is done tongue-in-cheek but also somewhat ruefully. It saddens us to see the hyper-partisan nature of our politics and the hate-filled rhetoric that has become commonplace, but that exists because of the behavior of our leaders themselves and the cultural programming emanating from our media institutions - not because of a silly fucking website you pearl-clutching Pharisee.",
+
+    crawlerQuestion: "Why are you wondering if the Senator is alive?",
+    crawlerAnswer:
+      "This website celebrates life and the accomplishments of the Senator. However, his health is in decline and many people (both supporters and otherwise) are interested in this question. We wish the Senator good health at home with his family where he belongs. Users can opt to celebrate either status with kitties, flowers and rainbows.",
   },
 ];

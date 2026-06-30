@@ -55,10 +55,10 @@ const structuredData = noindex
         "@type": "FAQPage",
         mainEntity: faqs.map((faq) => ({
           "@type": "Question",
-          name: faq.question,
+          name: faq.crawlerQuestion ?? faq.question,
           acceptedAnswer: {
             "@type": "Answer",
-            text: faq.answer,
+            text: faq.crawlerAnswer ?? faq.answer,
           },
         })),
       },
