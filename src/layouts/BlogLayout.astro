@@ -1,6 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
+import "../styles/fonts/mono.css";
 import PostHog from "../components/posthog.astro";
 import BlogShell from "../components/BlogShell.astro";
 import { SITE } from "../lib/site";
@@ -59,7 +60,7 @@ const structuredData = noindex
 ---
 
 <!doctype html>
-<html lang="en" data-site-theme="default">
+<html lang="en" data-site-theme="default" class="blog-page">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -100,23 +101,16 @@ const structuredData = noindex
 
     <meta name="theme-color" content="#0a3161" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
-
     {structuredData.map((data) => (
       <script type="application/ld+json" set:html={JSON.stringify(data)} />
     ))}
 
-    <PostHog />
     <ClientRouter />
   </head>
   <body>
     <BlogShell activeNav="blog">
       <slot />
     </BlogShell>
+    <PostHog />
   </body>
 </html>

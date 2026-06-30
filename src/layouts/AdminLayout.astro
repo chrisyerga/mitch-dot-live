@@ -1,6 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
+import "../styles/fonts/mono.css";
 import PostHog from "../components/posthog.astro";
 import { SITE } from "../lib/site";
 
@@ -37,17 +38,10 @@ const pageTitle = `${title} | ${SITE.name}`;
       }
     </style>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&display=swap"
-      rel="stylesheet"
-    />
-
-    <PostHog />
     <ClientRouter />
   </head>
   <body class="admin-page">
     <slot />
+    <PostHog />
   </body>
 </html>

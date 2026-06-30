@@ -1,0 +1,23 @@
+---
+import celebrationFontUrl from "../styles/fonts/celebration.css?url";
+import memorialFontUrl from "../styles/fonts/memorial.css?url";
+---
+
+<script is:inline define:vars={{ celebrationFontUrl, memorialFontUrl }}>
+  (function () {
+    var pref = localStorage.getItem("themePreference");
+    var alive = true;
+    var theme = "default";
+    if (pref === "happyNow") theme = alive ? "celebration" : "memorial";
+    else if (pref === "happyLater") theme = alive ? "memorial" : "celebration";
+    document.documentElement.dataset.siteTheme = theme;
+
+    if (theme === "default") return;
+
+    var href = theme === "celebration" ? celebrationFontUrl : memorialFontUrl;
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    document.head.appendChild(link);
+  })();
+</script>

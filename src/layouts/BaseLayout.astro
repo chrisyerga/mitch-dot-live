@@ -2,6 +2,7 @@
 import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 import PostHog from "../components/posthog.astro";
+import ThemeBootScript from "../components/ThemeBootScript.astro";
 import { SITE } from "../lib/site";
 import { faqs } from "../data/faq";
 
@@ -69,6 +70,7 @@ const structuredData = noindex
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <ThemeBootScript />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     {noindex ? (
@@ -105,31 +107,14 @@ const structuredData = noindex
 
     <meta name="theme-color" content="#0a3161" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&display=swap"
-      rel="stylesheet"
-    />
-
     {structuredData.map((data) => (
       <script type="application/ld+json" set:html={JSON.stringify(data)} />
     ))}
 
-    <PostHog />
     <ClientRouter />
-    <script is:inline>
-      (function () {
-        var pref = localStorage.getItem("themePreference");
-        var alive = true;
-        var theme = "default";
-        if (pref === "happyNow") theme = alive ? "celebration" : "memorial";
-        else if (pref === "happyLater") theme = alive ? "memorial" : "celebration";
-        document.documentElement.dataset.siteTheme = theme;
-      })();
-    </script>
   </head>
   <body>
     <slot />
+    <PostHog />
   </body>
 </html>

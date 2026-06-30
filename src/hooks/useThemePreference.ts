@@ -6,6 +6,7 @@ import {
   type ThemePreference,
   type SiteTheme,
 } from "../lib/themes";
+import { loadThemeFonts } from "../lib/loadThemeFonts";
 
 export function useThemePreference(isAlive: boolean) {
   const [preference, setPreferenceState] = useState<ThemePreference>("neutral");
@@ -17,6 +18,7 @@ export function useThemePreference(isAlive: boolean) {
 
   useEffect(() => {
     document.documentElement.dataset.siteTheme = visualTheme;
+    void loadThemeFonts(visualTheme);
   }, [visualTheme]);
 
   const setPreference = (next: ThemePreference) => {

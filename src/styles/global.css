@@ -668,6 +668,11 @@ html.admin-page,
 body.admin-page {
   background: #12141a;
   color: #e8e8ea;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+html.blog-page {
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 }
 
 .admin-shell {

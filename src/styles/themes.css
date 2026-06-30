@@ -12,7 +12,7 @@
   --radius: 6px;
   --font-display: "Helvetica Neue", Arial, sans-serif;
   --font-body: "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --hero-anim: heartbeat 1.7s ease-in-out infinite;
   --shadow: 0 1px 3px rgba(13, 27, 42, 0.07), 0 10px 30px rgba(13, 27, 42, 0.05);
   --answer-bg: none;
@@ -31,6 +31,7 @@
   --radius: 26px;
   --font-display: "Fredoka", sans-serif;
   --font-body: "Fredoka", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --hero-anim: wiggle 1.3s ease-in-out infinite, rainbowMove 5s linear infinite;
   --shadow: 0 10px 0 rgba(255, 154, 0, 0.13), 0 14px 34px rgba(255, 93, 162, 0.18);
   --answer-bg: linear-gradient(
@@ -58,6 +59,7 @@
   --radius: 6px;
   --font-display: "Playfair Display", Georgia, serif;
   --font-body: Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --hero-anim: none;
   --shadow: 0 14px 44px rgba(0, 0, 0, 0.5);
   --answer-bg: none;
