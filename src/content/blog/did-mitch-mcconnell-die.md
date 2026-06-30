@@ -6,7 +6,7 @@ tags:
   - mitch-mcconnell
 ---
 
-# Search Frequency Increases
+## Search Frequency Increases
 We are seeing a lot of searches related to the Senator's health and status. This site is intended to provide reliable and constantly-updated status. We search wire services, official US Senate records and more to bring you not only the answer to that question but the latest breaking news.
 
 ## Searches

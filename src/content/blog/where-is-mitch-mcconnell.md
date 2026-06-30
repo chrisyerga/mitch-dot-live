@@ -6,7 +6,7 @@ tags:
   - mitch-mcconnell
 ---
 
-# Where is Mitch McConnell?
+## Where is Mitch McConnell?
 
 While there have been no official statements from his staff since June 22, his security detail was seen at Walter Reed Medical Center where he is receiving medical attention.
 

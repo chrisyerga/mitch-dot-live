@@ -1312,6 +1312,7 @@ body.admin-page {
 
 .blog-prose li {
   margin-bottom: 0.4rem;
+  list-style-type: square;
 }
 
 .blog-prose li::marker {
