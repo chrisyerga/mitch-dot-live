@@ -12,6 +12,8 @@ While there have been no official statements from his staff since June 22, his s
 
 Senator McConnell was absent from the Senate the week of June 22nd. The United States Senate is currently in recess until July 13th. Widespread expectations are continued silence from his team unless there is a material change in his condition.
 
+<img src="https://lindale.atl1.cdn.digitaloceanspaces.com/walter-reed.jpg" height="300px"/>
+
 ## Online Speculation
 
 Given the lack of communication on the Senator's health, rumors abound online. These include speculation
