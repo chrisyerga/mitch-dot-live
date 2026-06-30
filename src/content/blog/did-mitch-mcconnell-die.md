@@ -11,7 +11,7 @@ We are seeing a lot of searches related to the Senator's health and status. This
 
 ## Searches
 
-- Is Mitch McConnell Dead? Ansewr: NO
+- Is Mitch McConnell Dead? Answer: NO
 - Did Mitch McConnell Die? Answer: NO
 
 Simply go to the homepage tracker and keep the site open. News and answers will update in real-time. No refresh required.
