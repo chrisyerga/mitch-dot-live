@@ -2,10 +2,10 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BlogShell from "../../components/BlogShell.astro";
 import BlogHomeCta from "../../components/BlogHomeCta.astro";
-import { getPublishedBlogPosts, formatBlogDate } from "../../lib/blog";
+import { getBlogIndexPosts, formatBlogDate } from "../../lib/blog";
 import { getTagPillStyle } from "../../lib/tagPill";
 
-const posts = await getPublishedBlogPosts();
+const posts = await getBlogIndexPosts();
 ---
 
 <BaseLayout

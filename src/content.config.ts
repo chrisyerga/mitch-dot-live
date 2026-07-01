@@ -10,6 +10,8 @@ const blogPostSchema = z.object({
   updatedDate: z.coerce.date().optional(),
   tags: z.array(z.string()).optional(),
   draft: z.boolean().optional(),
+  /** When false, the post is built and sitemapped but omitted from /blog/ index. Default: true */
+  listInIndex: z.boolean().optional(),
 });
 
 const blog = defineCollection({

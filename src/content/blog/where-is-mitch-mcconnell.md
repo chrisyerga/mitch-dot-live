@@ -2,6 +2,7 @@
 title: "Where is Mitch McConnell?"
 description: "Online speculation about the Senator's wherabouts"
 pubDate: 2026-06-27
+listInIndex: false
 tags:
   - mitch-mcconnell
 ---

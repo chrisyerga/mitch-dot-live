@@ -10,6 +10,7 @@ const editorialSchema = z.object({
   updatedDate: z.coerce.date().optional(),
   tags: z.array(z.string()).optional(),
   source: z.enum(["ai", "manual"]),
+  listInIndex: z.boolean().optional(),
 });
 
 type EditorialApiPost = {
@@ -21,6 +22,7 @@ type EditorialApiPost = {
   updatedAt: number | null;
   tags: string[] | null;
   source: "ai" | "manual";
+  listInIndex: boolean;
 };
 
 export function editorialConvexLoader(): Loader {
@@ -54,6 +56,7 @@ export function editorialConvexLoader(): Loader {
               updatedDate: post.updatedAt ? new Date(post.updatedAt) : undefined,
               tags: post.tags ?? undefined,
               source: post.source,
+              listInIndex: post.listInIndex,
             },
           });
 

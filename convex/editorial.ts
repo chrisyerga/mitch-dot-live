@@ -27,6 +27,7 @@ const editorialPostValidator = v.object({
   status: editorialStatusValidator,
   source: editorialSourceValidator,
   tags: v.union(v.array(v.string()), v.null()),
+  listInIndex: v.union(v.boolean(), v.null()),
   deployRequestedAt: v.union(v.number(), v.null()),
   deployStatus: v.union(deployStatusValidator, v.null()),
   deployError: v.union(v.string(), v.null()),
@@ -41,6 +42,7 @@ const publishedPostValidator = v.object({
   updatedAt: v.union(v.number(), v.null()),
   tags: v.union(v.array(v.string()), v.null()),
   source: editorialSourceValidator,
+  listInIndex: v.boolean(),
 });
 
 function normalizeSlug(slug: string): string {
@@ -68,6 +70,7 @@ function toEditorialPost(post: Doc<"editorialPosts">) {
     status: post.status,
     source: post.source,
     tags: post.tags ?? null,
+    listInIndex: post.listInIndex ?? null,
     deployRequestedAt: post.deployRequestedAt ?? null,
     deployStatus: post.deployStatus ?? null,
     deployError: post.deployError ?? null,
@@ -84,6 +87,7 @@ function toPublishedPost(post: Doc<"editorialPosts">) {
     updatedAt: post.updatedAt ?? null,
     tags: post.tags ?? null,
     source: post.source,
+    listInIndex: post.listInIndex ?? true,
   };
 }
 
@@ -129,6 +133,7 @@ export const create = mutation({
     status: editorialStatusValidator,
     source: editorialSourceValidator,
     tags: v.optional(v.array(v.string())),
+    listInIndex: v.optional(v.boolean()),
   },
   returns: v.id("editorialPosts"),
   handler: async (ctx, args) => {
@@ -157,6 +162,7 @@ export const create = mutation({
       status: args.status,
       source: args.source,
       tags: args.tags,
+      listInIndex: args.listInIndex ?? true,
       deployStatus: isPublished ? "pending" : undefined,
       deployRequestedAt: isPublished ? now : undefined,
     });
@@ -183,6 +189,7 @@ export const update = mutation({
     status: editorialStatusValidator,
     source: editorialSourceValidator,
     tags: v.optional(v.array(v.string())),
+    listInIndex: v.optional(v.boolean()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -205,7 +212,13 @@ export const update = mutation({
     const now = Date.now();
     const isPublished = args.status === "published";
     const wasPublished = post.status === "published";
-    const shouldTriggerDeploy = isPublished && (!wasPublished || post.body !== args.body);
+    const nextListInIndex = args.listInIndex ?? true;
+    const previousListInIndex = post.listInIndex ?? true;
+    const shouldTriggerDeploy =
+      isPublished &&
+      (!wasPublished ||
+        post.body !== args.body ||
+        previousListInIndex !== nextListInIndex);
 
     await ctx.db.patch(args.id, {
       title: args.title.trim(),
@@ -218,6 +231,7 @@ export const update = mutation({
       status: args.status,
       source: args.source,
       tags: args.tags,
+      listInIndex: nextListInIndex,
       deployStatus: shouldTriggerDeploy ? "pending" : post.deployStatus,
       deployRequestedAt: shouldTriggerDeploy ? now : post.deployRequestedAt,
       deployError: shouldTriggerDeploy ? undefined : post.deployError,

@@ -66,6 +66,7 @@ export default defineSchema({
     status: v.union(v.literal("draft"), v.literal("published")),
     source: v.union(v.literal("ai"), v.literal("manual")),
     tags: v.optional(v.array(v.string())),
+    listInIndex: v.optional(v.boolean()),
     deployRequestedAt: v.optional(v.number()),
     deployStatus: v.optional(
       v.union(

@@ -13,6 +13,7 @@ type EditorialFormState = {
   status: "draft" | "published";
   source: "ai" | "manual";
   tags: string;
+  listInIndex: boolean;
 };
 
 const emptyForm: EditorialFormState = {
@@ -24,6 +25,7 @@ const emptyForm: EditorialFormState = {
   status: "draft",
   source: "manual",
   tags: "",
+  listInIndex: true,
 };
 
 function deployStatusLabel(status: string | null): string {
@@ -78,6 +80,7 @@ export function EditorialPanel({
         status: form.status,
         source: form.source,
         tags: tags.length > 0 ? tags : undefined,
+        listInIndex: form.listInIndex,
       };
 
       if (!payload.title || !payload.slug || !payload.description || !payload.body) {
@@ -110,6 +113,7 @@ export function EditorialPanel({
       status: post.status,
       source: post.source,
       tags: post.tags?.join(", ") ?? "",
+      listInIndex: post.listInIndex ?? true,
     });
   };
 
@@ -232,6 +236,17 @@ export function EditorialPanel({
               </select>
             </label>
           </div>
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={form.listInIndex}
+              onChange={(e) => setForm({ ...form, listInIndex: e.target.checked })}
+              className="rounded"
+            />
+            <span className="text-sm opacity-90">
+              Show on blog index (<code className="font-mono text-xs">/blog/</code>)
+            </span>
+          </label>
           <div className="flex gap-3">
             <button type="submit" disabled={busy} className="admin-btn rounded-lg px-4 py-2">
               {busy ? "Saving…" : editingId ? "Update post" : "Add post"}
@@ -268,6 +283,7 @@ export function EditorialPanel({
                     <p className="mt-1 text-sm opacity-70">
                       /blog/{post.slug}/ · {post.status} · {post.source} ·{" "}
                       {formatCheckedAt(post.publishedAt)}
+                      {(post.listInIndex ?? true) ? "" : " · hidden from index"}
                     </p>
                     <p className="mt-1 text-sm opacity-70">
                       {deployStatusLabel(post.deployStatus)}

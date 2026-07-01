@@ -244,14 +244,16 @@ Three domains point at the same app. The canonical domain is served directly; th
 
 ## Analytics events
 
-PostHog tracks these custom events (see [`src/lib/analytics.ts`](./src/lib/analytics.ts)):
+PostHog tracks these custom events via [`captureEvent()`](./src/lib/analytics.ts):
 
-| Event | Trigger |
-|---|---|
-| `status_viewed` | Page loads with current alive/deceased state |
-| `theme_preference_selected` | Visitor picks Neutral / Happy Now / Happy Later |
-| `faq_item_expanded` | FAQ accordion item opened |
-| `news_link_clicked` | Outbound click on a curated news article |
+| Event | Trigger | Properties |
+|---|---|---|
+| `status_viewed` | Homepage loads or live status changes | `isAlive` (boolean) |
+| `theme_preference_selected` | Visitor picks a theme preference | `preference` (`neutral`, `happyNow`, or `happyLater`) |
+| `faq_item_expanded` | FAQ accordion item opened | `question` (string) |
+| `news_link_clicked` | Outbound click on a curated news article | `title`, `source`, `url` |
+| `footer_link_clicked` | Footer link clicked (Blog, Lindale Labs, GitHub) | `link` (`blog`, `lindale_labs`, or `github`), `url` |
+| `admin_honeypot_viewed` | Decoy admin honeypot page viewed | `image` (random honeypot image path) |
 
 ## License
 

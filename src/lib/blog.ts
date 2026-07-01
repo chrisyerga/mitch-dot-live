@@ -12,6 +12,7 @@ export type UnifiedBlogPost = {
   updatedDate?: Date;
   tags?: string[];
   source: "markdown" | "ai" | "manual";
+  listInIndex: boolean;
 };
 
 function slugFromMarkdownId(id: string): string {
@@ -40,6 +41,7 @@ function toUnifiedPost(
     updatedDate: entry.data.updatedDate,
     tags: entry.data.tags,
     source,
+    listInIndex: entry.data.listInIndex ?? true,
   };
 }
 
@@ -76,6 +78,12 @@ export async function getPublishedBlogPosts(): Promise<UnifiedBlogPost[]> {
   return unified.sort(
     (a, b) => b.pubDate.getTime() - a.pubDate.getTime(),
   );
+}
+
+/** Posts visible on /blog/ index (excludes listInIndex: false). */
+export async function getBlogIndexPosts(): Promise<UnifiedBlogPost[]> {
+  const posts = await getPublishedBlogPosts();
+  return posts.filter((post) => post.listInIndex);
 }
 
 export function formatBlogDate(date: Date): string {

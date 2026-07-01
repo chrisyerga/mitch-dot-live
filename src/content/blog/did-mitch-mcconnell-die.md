@@ -2,6 +2,7 @@
 title: "Is Mitch McConnell Dead?"
 description: "The answer is NO and is updated live here."
 pubDate: 2026-06-22
+listInIndex: false
 tags:
   - mitch-mcconnell
 ---

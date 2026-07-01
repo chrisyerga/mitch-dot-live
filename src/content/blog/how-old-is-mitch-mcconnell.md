@@ -2,6 +2,7 @@
 title: "How old is Mitch McConnell?"
 description: "Mitch McConnell's age, Senate tenure, and why people search for his health status — with context on how this tracker verifies the answer."
 pubDate: 2026-06-25
+listInIndex: false
 tags:
   - biography
   - senate

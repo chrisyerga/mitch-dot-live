@@ -2,6 +2,7 @@
 title: "麦康奈尔状态追踪器检查什么"
 description: "简明介绍 ismitchmcconnella.live 使用的数据来源、置信度评分，以及 MAYBE（待定）状态的含义。"
 pubDate: 2026-06-01
+listInIndex: false
 tags:
   - 追踪器
   - 可靠性
