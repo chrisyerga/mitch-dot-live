@@ -1,6 +1,15 @@
 import { useMemo } from "react";
 import type { SiteTheme } from "../lib/themes";
 
+type FloatDeco = {
+  emoji: string;
+  left: string;
+  top: string;
+  size: number;
+  dur: string;
+  delay: string;
+};
+
 type Deco = {
   dots: Array<{ left: string; top: string; size: number; dur: string }>;
   confetti: Array<{
@@ -11,14 +20,8 @@ type Deco = {
     dur: string;
     delay: string;
   }>;
-  floats: Array<{
-    emoji: string;
-    left: string;
-    top: string;
-    size: number;
-    dur: string;
-    delay: string;
-  }>;
+  floats: FloatDeco[];
+  turtleFloats: FloatDeco[];
   rain: Array<{
     left: string;
     len: number;
@@ -36,10 +39,24 @@ type Deco = {
   }>;
 };
 
+function buildFloats(count: number, emojis: string[]) {
+  const rnd = (a: number, b: number) => a + Math.random() * (b - a);
+
+  return Array.from({ length: count }, (_, i) => ({
+    emoji: emojis[i % emojis.length] ?? emojis[0] ?? "🐢",
+    left: rnd(2, 94).toFixed(1),
+    top: rnd(6, 88).toFixed(1),
+    size: Math.round(rnd(28, 52)),
+    dur: rnd(4.5, 8).toFixed(1),
+    delay: rnd(0, 4).toFixed(1),
+  }));
+}
+
 function buildDeco(): Deco {
   const rnd = (a: number, b: number) => a + Math.random() * (b - a);
   const palette = ["#ff5da2", "#ff9a00", "#ffe14d", "#5ad06a", "#4db4ff", "#9b6bff"];
   const flowerEmoji = ["🌻", "🌸", "🌼", "🌈", "🦋", "🐝", "🌷", "💐", "🐱", "☀️", "🌺", "🍀"];
+  const turtleEmoji = ["🐢"];
 
   return {
     dots: Array.from({ length: 7 }, () => ({
@@ -56,14 +73,8 @@ function buildDeco(): Deco {
       dur: rnd(5, 10).toFixed(1),
       delay: rnd(0, 7).toFixed(1),
     })),
-    floats: Array.from({ length: 13 }, (_, i) => ({
-      emoji: flowerEmoji[i % flowerEmoji.length] ?? "🌻",
-      left: rnd(2, 94).toFixed(1),
-      top: rnd(6, 88).toFixed(1),
-      size: Math.round(rnd(28, 52)),
-      dur: rnd(4.5, 8).toFixed(1),
-      delay: rnd(0, 4).toFixed(1),
-    })),
+    floats: buildFloats(13, flowerEmoji),
+    turtleFloats: buildFloats(13, turtleEmoji),
     rain: Array.from({ length: 110 }, () => ({
       left: rnd(-4, 102).toFixed(1),
       len: Math.round(rnd(50, 124)),
@@ -172,6 +183,21 @@ export function ThemeDecorations({ theme }: ThemeDecorationsProps) {
                 animationDelay: `${r.delay}s`,
               }}
             />
+          ))}
+          {deco.turtleFloats.map((f, i) => (
+            <div
+              key={`turtle-${i}`}
+              className="theme-deco-float absolute"
+              style={{
+                left: `${f.left}%`,
+                top: `${f.top}%`,
+                fontSize: f.size,
+                animationDuration: `${f.dur}s`,
+                animationDelay: `${f.delay}s`,
+              }}
+            >
+              {f.emoji}
+            </div>
           ))}
           <div className="theme-deco-fog absolute inset-x-0 bottom-0 h-[170px]" />
         </>
