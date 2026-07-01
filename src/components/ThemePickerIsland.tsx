@@ -28,7 +28,7 @@ export function ThemePickerIsland({
           id="disposition-heading"
           className="theme-picker-island-banner font-display text-center font-extrabold tracking-[0.14em] uppercase"
         >
-          Your disposition
+          THEME: Your disposition
         </div>
 
         <div className="theme-picker-island-body">
