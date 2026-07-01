@@ -14,11 +14,11 @@ export const themePreferenceLabels: Record<
   },
   happyNow: {
     label: "Happy Now",
-    hint: "Celebrate his life; mourn his death.",
+    hint: "Celebrate his life; mourn his death. The theme will switch automatically when he passes.",
   },
   happyLater: {
     label: "Happy Later",
-    hint: "Mourn now; celebrate when he passes.",
+    hint: "Mourn now; celebrate after. The theme will switch automatically when he passes.",
   },
 };
 

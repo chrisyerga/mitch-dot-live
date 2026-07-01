@@ -57,8 +57,8 @@
   --accent2: #9aa3af;
   --line: #2b2f36;
   --radius: 6px;
-  --font-display: "Playfair Display", Georgia, serif;
-  --font-body: Georgia, "Times New Roman", serif;
+  --font-display: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --hero-anim: none;
   --shadow: 0 14px 44px rgba(0, 0, 0, 0.5);
