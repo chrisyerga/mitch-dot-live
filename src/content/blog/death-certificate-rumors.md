@@ -34,7 +34,7 @@ And reality isn't anywhere near as interesting or entertaining. However, the pub
 
 ## Watch This Space
 
-Keep the tracker open. It updates in real-time as news breaks or as new information is available.
+Keep the [LIVE Tracker](https://ismitchmcconnella.live) open. It updates in real-time as news breaks or as new information is available.
 
 This tracker does not guess based on rumors. It polls structured sources — Wikidata, Wikipedia, Congress.gov, and major wire headlines — on a schedule and shows the current consensus. A definitive **NO** answer requires human review; conflicting signals surface as **MAYBE** until confirmed.
 

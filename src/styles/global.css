@@ -1148,7 +1148,9 @@ html.blog-page {
 
 .blog-home-cta {
   display: grid;
-  gap: 0.35rem;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 1rem 1.25rem;
   margin-bottom: 1.5rem;
   padding: 1rem 1.15rem;
   border-radius: var(--radius);
@@ -1165,6 +1167,22 @@ html.blog-page {
     border-color 0.15s ease,
     box-shadow 0.15s ease,
     transform 0.15s ease;
+}
+
+.blog-home-cta-body {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.blog-home-cta-image {
+  width: 7.25rem;
+  max-width: 32vw;
+  height: auto;
+  border-radius: calc(var(--radius) - 2px);
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--fg) 12%, transparent);
 }
 
 .blog-home-cta:hover {

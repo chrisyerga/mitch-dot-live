@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BlogShell from "../../components/BlogShell.astro";
+import BlogHomeCta from "../../components/BlogHomeCta.astro";
 import { getPublishedBlogPosts, formatBlogDate } from "../../lib/blog";
 import { getTagPillStyle } from "../../lib/tagPill";
 
@@ -12,6 +13,8 @@ const posts = await getPublishedBlogPosts();
   description="Articles about Senator Mitch McConnell, Senate leadership, and how this live status tracker works."
 >
   <BlogShell activeNav="blog">
+    <BlogHomeCta />
+
     <section class="blog-hero">
       <p class="blog-kicker">Editorial</p>
       <h1 class="blog-title">Blog</h1>
