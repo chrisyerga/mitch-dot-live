@@ -44,30 +44,36 @@ export function StatsSection() {
 
   return (
     <section className="mx-auto max-w-[1180px] px-6 py-8">
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-5">
+      <div className="grid grid-cols-2 gap-3 sm:gap-5">
         <article className="stat-card reveal-up">
           <div className="stat-label">Age</div>
-          <div className="mt-2 flex items-baseline gap-2.5">
+          <div className="mt-2 flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:gap-2.5">
             <span className="stat-number text-[color:var(--accent2)]">{age.years}</span>
-            <span className="text-xl font-semibold text-[color:var(--fg)]">years old</span>
+            <span className="text-base font-semibold text-[color:var(--fg)] sm:text-xl">years old</span>
           </div>
-          <div className="stat-live mt-2 font-mono text-base text-[color:var(--muted)]" suppressHydrationWarning>
+          <div
+            className="stat-live mt-2 font-mono text-xs text-[color:var(--muted)] sm:text-base"
+            suppressHydrationWarning
+          >
             {showLive ? liveStr(age) : "…"}
           </div>
-          <div className="stat-footnote mt-4 border-t border-[color:var(--line)] pt-3 text-[13px] text-[color:var(--muted)]">
+          <div className="stat-footnote mt-4 border-t border-[color:var(--line)] pt-3 text-[11px] text-[color:var(--muted)] sm:text-[13px]">
             Born February 20, 1942 · Sheffield, Alabama
           </div>
         </article>
         <article className="stat-card reveal-up reveal-up-delay-1">
           <div className="stat-label">Time in the Senate</div>
-          <div className="mt-2 flex items-baseline gap-2.5">
+          <div className="mt-2 flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:gap-2.5">
             <span className="stat-number text-[color:var(--accent)]">{tenure.years}</span>
-            <span className="text-xl font-semibold text-[color:var(--fg)]">years</span>
+            <span className="text-base font-semibold text-[color:var(--fg)] sm:text-xl">years</span>
           </div>
-          <div className="stat-live mt-2 font-mono text-base text-[color:var(--muted)]" suppressHydrationWarning>
+          <div
+            className="stat-live mt-2 font-mono text-xs text-[color:var(--muted)] sm:text-base"
+            suppressHydrationWarning
+          >
             {showLive ? liveStr(tenure) : "…"}
           </div>
-          <div className="stat-footnote mt-4 border-t border-[color:var(--line)] pt-3 text-[13px] text-[color:var(--muted)]">
+          <div className="stat-footnote mt-4 border-t border-[color:var(--line)] pt-3 text-[11px] text-[color:var(--muted)] sm:text-[13px]">
             Sworn in January 3, 1985
           </div>
         </article>

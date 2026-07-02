@@ -500,6 +500,16 @@ body {
   padding: 28px;
 }
 
+@media (max-width: 639px) {
+  .stat-card {
+    padding: 16px;
+  }
+
+  .stat-number {
+    font-size: clamp(36px, 11vw, 54px);
+  }
+}
+
 .stat-label {
   font-size: 12px;
   font-weight: 700;
