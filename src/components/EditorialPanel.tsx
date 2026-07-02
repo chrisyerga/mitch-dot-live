@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "convex/react";
 import { useState, type FormEvent } from "react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
-import { formatCheckedAt } from "../lib/format";
+import { formatCheckedAt, fromDatetimeLocalValue, toDatetimeLocalValue } from "../lib/format";
 
 type EditorialFormState = {
   title: string;
@@ -21,7 +21,7 @@ const emptyForm: EditorialFormState = {
   slug: "",
   description: "",
   body: "",
-  publishedAt: new Date().toISOString().slice(0, 10),
+  publishedAt: toDatetimeLocalValue(Date.now()),
   status: "draft",
   source: "manual",
   tags: "",
@@ -76,7 +76,7 @@ export function EditorialPanel({
         slug: form.slug.trim(),
         description: form.description.trim(),
         body: form.body,
-        publishedAt: Date.parse(form.publishedAt),
+        publishedAt: fromDatetimeLocalValue(form.publishedAt),
         status: form.status,
         source: form.source,
         tags: tags.length > 0 ? tags : undefined,
@@ -109,7 +109,7 @@ export function EditorialPanel({
       slug: post.slug,
       description: post.description,
       body: post.body,
-      publishedAt: new Date(post.publishedAt).toISOString().slice(0, 10),
+      publishedAt: toDatetimeLocalValue(post.publishedAt),
       status: post.status,
       source: post.source,
       tags: post.tags?.join(", ") ?? "",
@@ -178,10 +178,10 @@ export function EditorialPanel({
           <div className="grid gap-4 md:grid-cols-2">
             <label className="block">
               <span className="font-mono text-xs uppercase tracking-[0.2em] opacity-70">
-                Published date
+                Published date &amp; time
               </span>
               <input
-                type="date"
+                type="datetime-local"
                 value={form.publishedAt}
                 onChange={(e) => setForm({ ...form, publishedAt: e.target.value })}
                 className="admin-input mt-2 w-full rounded-lg px-3 py-2"

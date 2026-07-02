@@ -1,3 +1,15 @@
+/** Format a timestamp for `<input type="datetime-local">` (local time, no seconds). */
+export function toDatetimeLocalValue(timestamp: number): string {
+  const date = new Date(timestamp);
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+/** Parse an `<input type="datetime-local">` value to a timestamp (local time). */
+export function fromDatetimeLocalValue(value: string): number {
+  return new Date(value).getTime();
+}
+
 export function formatDateEt(
   timestamp: number,
   options: Intl.DateTimeFormatOptions = {},

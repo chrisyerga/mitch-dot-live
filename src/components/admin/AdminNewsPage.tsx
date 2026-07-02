@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "convex/react";
 import { useState, type FormEvent } from "react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
+import { formatCheckedAt, fromDatetimeLocalValue, toDatetimeLocalValue } from "../../lib/format";
 
 type NewsFormState = {
   title: string;
@@ -17,7 +18,7 @@ const emptyForm: NewsFormState = {
   title: "",
   url: "",
   source: "",
-  publishedAt: new Date().toISOString().slice(0, 10),
+  publishedAt: toDatetimeLocalValue(Date.now()),
   isPublished: true,
   sortOrder: 0,
   imageUrl: "",
@@ -52,7 +53,7 @@ export function AdminNewsPage({
         title: form.title.trim(),
         url: form.url.trim(),
         source: form.source.trim(),
-        publishedAt: Date.parse(form.publishedAt),
+        publishedAt: fromDatetimeLocalValue(form.publishedAt),
         isPublished: form.isPublished,
         sortOrder: form.sortOrder,
         imageUrl: form.imageUrl.trim() || undefined,
@@ -83,7 +84,7 @@ export function AdminNewsPage({
       title: item.title,
       url: item.url,
       source: item.source,
-      publishedAt: new Date(item.publishedAt).toISOString().slice(0, 10),
+      publishedAt: toDatetimeLocalValue(item.publishedAt),
       isPublished: item.isPublished,
       sortOrder: item.sortOrder,
       imageUrl: item.imageUrl ?? "",
@@ -134,9 +135,11 @@ export function AdminNewsPage({
             />
           </label>
           <label className="block">
-            <span className="font-mono text-xs uppercase tracking-[0.2em] opacity-70">Published</span>
+            <span className="font-mono text-xs uppercase tracking-[0.2em] opacity-70">
+              Published date &amp; time
+            </span>
             <input
-              type="date"
+              type="datetime-local"
               value={form.publishedAt}
               onChange={(e) => setForm({ ...form, publishedAt: e.target.value })}
               className="admin-input mt-2 w-full rounded-lg px-3 py-2"
@@ -194,8 +197,8 @@ export function AdminNewsPage({
                   <div>
                     <p className="font-semibold">{item.title}</p>
                     <p className="mt-1 text-sm opacity-70">
-                      {item.source} · sort {item.sortOrder} ·{" "}
-                      {item.isPublished ? "published" : "draft"}
+                      {item.source} · {formatCheckedAt(item.publishedAt)} · sort {item.sortOrder}{" "}
+                      · {item.isPublished ? "published" : "draft"}
                     </p>
                   </div>
                   <div className="flex gap-2">

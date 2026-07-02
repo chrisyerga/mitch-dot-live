@@ -1,7 +1,7 @@
 ---
 title: "Mitch McConnell staff refuses to answer questions after 911 call"
 description: "The Daily Beast reports that McConnell's spokespeople declined to say whether the 84-year-old senator is still hospitalized three weeks after CPR at his D.C. home."
-pubDate: 2026-07-02
+pubDate: 2026-07-02 15:30:00
 tags:
   - mitch-mcconnell
   - 911-call
