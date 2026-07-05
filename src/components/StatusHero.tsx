@@ -4,7 +4,7 @@ import { api } from "../../convex/_generated/api";
 import type { SiteTheme } from "../lib/themes";
 import type { StatusData } from "../lib/status";
 import { latestDataSourceCheckAt } from "../lib/dataSources";
-import { formatHeroDate } from "../lib/format";
+import { RelativeCheckedAt } from "./RelativeCheckedAt";
 import {
   analyzeSourceConsensusBreakdown,
   DEV_PREVIEW_MAYBE_EVENT,
@@ -59,8 +59,6 @@ export function StatusHero({ theme, status }: StatusHeroProps) {
       ? "hero-answer-yes"
       : "hero-answer-no";
   const latestCheckedAt = latestDataSourceCheckAt(sources);
-  const asOfLabel =
-    latestCheckedAt != null ? formatHeroDate(latestCheckedAt) : "…";
   const line =
     breakdown.statusLine ??
     statusLine(isAlive, theme, status?.message, null);
@@ -106,7 +104,8 @@ export function StatusHero({ theme, status }: StatusHeroProps) {
 
         <div className="status-badge inline-flex items-center gap-2 rounded-full border border-[color:var(--line)] px-[15px] py-[7px] text-xs font-semibold tracking-[0.09em] text-[color:var(--muted)] uppercase">
           <span className="site-header-dot h-2 w-2 shrink-0 rounded-full" aria-hidden="true" />
-          Live status · as of {asOfLabel}
+          Live status. Last checked:{" "}
+          <RelativeCheckedAt timestamp={latestCheckedAt} fallback="…" />
         </div>
 
         <p className="hero-status-line m-0 max-w-[640px] text-[clamp(18px,2.8vw,28px)] leading-snug font-semibold text-[color:var(--fg)]">
