@@ -12,6 +12,7 @@ import {
   maybeStatusLine,
 } from "../lib/sourceConsensus";
 import { DataSourcesTable } from "./DataSourcesTable";
+import { MaybeHeadlines } from "./MaybeHeadlines";
 
 function statusLine(
   isAlive: boolean,
@@ -112,11 +113,13 @@ export function StatusHero({ theme, status }: StatusHeroProps) {
           {line}
         </p>
 
+        {showMaybe && <MaybeHeadlines />}
+
         <div className="mt-2 w-full">
           <p className="m-0 mb-3 text-center text-xs font-semibold tracking-[0.08em] text-[color:var(--muted)] uppercase">
             BASED ON THE FOLLOWING LIVE DATA:
           </p>
-          <DataSourcesTable compact />
+          <DataSourcesTable compact showDeceasedDetails={showMaybe} />
           {!isAlive && (
             <p className="m-0 mt-3 text-center text-sm text-[color:var(--muted)]">
               This page is preserved as a memorial.

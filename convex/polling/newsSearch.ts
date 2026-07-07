@@ -80,6 +80,38 @@ function isRecent(pubDate: string, maxAgeHours: number): boolean {
   return Date.now() - timestamp <= maxAgeHours * 60 * 60 * 1000;
 }
 
+/** Headlines that mention death only in rumor/recovery/health-update context. */
+const RUMOR_OR_RECOVERY_PATTERNS = [
+  /\b(recover(y|ing)|continuing (his |her )?recovery)\b/i,
+  /\b(rumor|rumours|debunk|hoax|fact.?check)\b/i,
+  /\b(health status|what we know|what is)\b/i,
+  /\b(amid|about)\b[^.]{0,40}\b(rumor|rumours|death rumor)/i,
+  /\b(won't say|refuses? to|won't confirm|won't answer)\b/i,
+  /\b(hospital stay|in hospital|cardiac arrest|unconscious)\b/i,
+  /\b(life support|brain dead)\b/i,
+  /\bupdate on\b/i,
+  /\bscarce\b/i,
+];
+
+/** Headlines that actually report death, not merely discuss it. */
+const DEATH_REPORT_PATTERNS = [
+  /\b(died|dies)\b/i,
+  /\bhas died\b/i,
+  /\bobituar/i,
+  /\bpassed away\b/i,
+  /\bpasses away\b/i,
+  /\bdeath of\b/i,
+  /\bmourn(s|ing)?\b/i,
+  /\bfuneral\b/i,
+];
+
+export function isDeathReportHeadline(title: string): boolean {
+  if (RUMOR_OR_RECOVERY_PATTERNS.some((pattern) => pattern.test(title))) {
+    return false;
+  }
+  return DEATH_REPORT_PATTERNS.some((pattern) => pattern.test(title));
+}
+
 export async function fetchWireHeadlines(
   config: DataSourceConfig,
 ): Promise<WirePollResult> {
@@ -114,27 +146,44 @@ export async function fetchWireHeadlines(
 
   const xml = await response.text();
   const items = parseRssItems(xml);
-  const matches = items.filter(
+  const wireItems = items.filter(
     (item) =>
       isRecent(item.pubDate, maxAgeHours) &&
       isAllowedDomain(item.sourceUrl ?? item.link, allowedDomains),
   );
 
-  if (matches.length > 0) {
-    const top = matches[0];
+  const deathReports = wireItems.filter((item) => isDeathReportHeadline(item.title));
+  const rumorMatches = wireItems.filter(
+    (item) => !isDeathReportHeadline(item.title),
+  );
+
+  if (deathReports.length > 0) {
+    const top = deathReports[0];
     const domain = domainFromUrl(top.sourceUrl ?? top.link) ?? "wire";
     return {
       parsedStatus: "deceased",
       detail: `${domain}: ${top.title}`,
       payloadSummary: `Wire headline match: ${top.title}`,
-      rawPayload: JSON.stringify({ matches: matches.slice(0, 5) }),
+      rawPayload: JSON.stringify({
+        matches: deathReports.slice(0, 5),
+        rumorMatches: rumorMatches.slice(0, 3),
+      }),
     };
   }
 
+  const rumorNote =
+    rumorMatches.length > 0
+      ? ` (${rumorMatches.length} rumor/recovery headline${rumorMatches.length === 1 ? "" : "s"} ignored)`
+      : "";
+
   return {
     parsedStatus: "unknown",
-    detail: `no wire death headlines in last ${maxAgeHours}h`,
-    payloadSummary: `No matching wire headlines in the last ${maxAgeHours} hours`,
-    rawPayload: JSON.stringify({ checkedItems: items.length, matches: [] }),
+    detail: `no wire death headlines in last ${maxAgeHours}h${rumorNote}`,
+    payloadSummary: `No death-reporting wire headlines in the last ${maxAgeHours} hours`,
+    rawPayload: JSON.stringify({
+      checkedItems: items.length,
+      matches: [],
+      rumorMatches: rumorMatches.slice(0, 5),
+    }),
   };
 }

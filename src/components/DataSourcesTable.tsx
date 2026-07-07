@@ -25,11 +25,14 @@ const confidenceClassName = {
 type DataSourcesTableProps = {
   showHistoryLink?: boolean;
   compact?: boolean;
+  /** When true, show headline detail for deceased sources in compact mode. */
+  showDeceasedDetails?: boolean;
 };
 
 export function DataSourcesTable({
   showHistoryLink = true,
   compact = false,
+  showDeceasedDetails = false,
 }: DataSourcesTableProps) {
   const sources = useQuery(api.dataSources.list);
   const sortedSources = sources
@@ -112,6 +115,14 @@ export function DataSourcesTable({
                           {source.currentStatusDetail}
                         </p>
                       )}
+                      {compact &&
+                        showDeceasedDetails &&
+                        source.currentStatus === "deceased" &&
+                        source.currentStatusDetail && (
+                          <p className="m-0 mt-1 text-xs text-[color:var(--muted)]">
+                            {source.currentStatusDetail}
+                          </p>
+                        )}
                     </td>
                     <td className="px-4 py-3 align-top">
                       <span
