@@ -12,10 +12,11 @@ export function clearStoredAdminToken(): void {
   localStorage.removeItem(ADMIN_SESSION_KEY);
 }
 
-export type AdminSection = "status" | "news" | "editorial";
+export type AdminSection = "status" | "news" | "editorial" | "generate";
 
 export const ADMIN_SECTIONS: Array<{ id: AdminSection; label: string; href: string }> = [
   { id: "status", label: "Status", href: "/admin/status/" },
   { id: "news", label: "News", href: "/admin/news/" },
   { id: "editorial", label: "Editorial", href: "/admin/editorial/" },
+  { id: "generate", label: "Generate", href: "/admin/generate/" },
 ];

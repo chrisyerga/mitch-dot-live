@@ -5,6 +5,7 @@ import { AdminShell } from "./admin/AdminShell";
 import { AdminStatusPage } from "./admin/AdminStatusPage";
 import { AdminNewsPage } from "./admin/AdminNewsPage";
 import { AdminEditorialPage } from "./admin/AdminEditorialPage";
+import { AdminGeneratePage } from "./admin/AdminGeneratePage";
 import { useAdminSession } from "../hooks/useAdminSession";
 import type { AdminSection } from "../lib/adminSession";
 
@@ -61,6 +62,9 @@ function AdminAppInner({ section }: { section: AdminSection }) {
       )}
       {section === "editorial" && (
         <AdminEditorialPage token={session.token} onError={session.setError} />
+      )}
+      {section === "generate" && (
+        <AdminGeneratePage token={session.token} onError={session.setError} />
       )}
     </AdminShell>
   );

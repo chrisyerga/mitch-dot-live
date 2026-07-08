@@ -210,6 +210,11 @@ npm run seed
 | `PUBLIC_POSTHOG_PROJECT_TOKEN` | Frontend build | PostHog project API key |
 | `PUBLIC_POSTHOG_HOST` | Frontend build | PostHog ingest host (default: `https://us.i.posthog.com`) |
 | `ADMIN_PASSWORD` | Convex dashboard | Admin login password (never in frontend code) |
+| `FORGE_API_KEY` | Convex dashboard | Bearer token for [Forge](https://forge.lindale.tech) `/v1/tasks` (admin blog generation) |
+| `FORGE_PROJECT_ID` | Convex dashboard | Forge project ID for the Mitch site persona |
+| `FORGE_BASE_URL` | Convex dashboard | Optional Forge API base URL (default: `https://forge.lindale.tech`) |
+| `GITHUB_DEPLOY_TOKEN` | Convex dashboard | GitHub token for editorial publish deploy webhook |
+| `GITHUB_REPO` | Convex dashboard | `owner/repo` for editorial publish deploy webhook |
 
 See [`.env.example`](./.env.example) for a starter template.
 

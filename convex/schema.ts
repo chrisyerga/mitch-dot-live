@@ -80,4 +80,26 @@ export default defineSchema({
     .index("by_slug", ["slug"])
     .index("by_published", ["isPublished", "publishedAt"])
     .index("by_status", ["status"]),
+
+  forgeGenerationJobs: defineTable({
+    prompt: v.string(),
+    forgeTaskId: v.string(),
+    status: v.union(
+      v.literal("queued"),
+      v.literal("running"),
+      v.literal("complete"),
+      v.literal("failed"),
+    ),
+    currentStage: v.optional(v.string()),
+    iteration: v.optional(v.number()),
+    maxIterations: v.optional(v.number()),
+    errorMessage: v.optional(v.string()),
+    editorialPostId: v.optional(v.id("editorialPosts")),
+    resultTitle: v.optional(v.string()),
+    resultSlug: v.optional(v.string()),
+    createdAt: v.number(),
+    finishedAt: v.optional(v.number()),
+  })
+    .index("by_forge_task", ["forgeTaskId"])
+    .index("by_created_at", ["createdAt"]),
 });
