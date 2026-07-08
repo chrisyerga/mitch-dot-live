@@ -2,11 +2,16 @@
 import { render } from "astro:content";
 import BlogLayout from "../../layouts/BlogLayout.astro";
 import BlogHomeCta from "../../components/BlogHomeCta.astro";
+import { BLOG_ENABLED } from "../../lib/blogConfig";
 import { getPublishedBlogPosts, formatBlogDate } from "../../lib/blog";
 import { getTagPillStyle } from "../../lib/tagPill";
 import type { BlogCollection } from "../../lib/blog";
 
 export async function getStaticPaths() {
+  if (!BLOG_ENABLED) {
+    return [];
+  }
+
   const posts = await getPublishedBlogPosts();
   return posts.map((post) => ({
     params: { slug: post.slug },

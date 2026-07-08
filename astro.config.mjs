@@ -6,6 +6,7 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { blogSitemapDates, blogLastmodBySlug } from './src/integrations/blogSitemapDates.ts';
+import { BLOG_ENABLED } from './src/lib/blogConfig.ts';
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,7 +15,8 @@ export default defineConfig({
     blogSitemapDates(),
     react(),
     sitemap({
-      filter: (page) => !page.includes('/admin'),
+      filter: (page) =>
+        !page.includes('/admin') && (BLOG_ENABLED || !page.includes('/blog')),
       serialize(item) {
         const match = item.url.match(/\/blog\/([^/]+)\/?$/);
         if (match && blogLastmodBySlug.has(match[1])) {

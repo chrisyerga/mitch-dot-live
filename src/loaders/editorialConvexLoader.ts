@@ -2,6 +2,7 @@ import type { Loader } from "astro/loaders";
 import { z } from "astro/zod";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../convex/_generated/api";
+import { BLOG_ENABLED } from "../lib/blogConfig";
 
 const editorialSchema = z.object({
   title: z.string(),
@@ -30,6 +31,10 @@ export function editorialConvexLoader(): Loader {
     name: "editorial-convex-loader",
     load: async ({ store, parseData, renderMarkdown, logger }) => {
       store.clear();
+
+      if (!BLOG_ENABLED) {
+        return;
+      }
 
       const convexUrl = import.meta.env.PUBLIC_CONVEX_URL;
       if (!convexUrl) {

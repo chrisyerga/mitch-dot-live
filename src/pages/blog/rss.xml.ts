@@ -1,6 +1,7 @@
 import rss from "@astrojs/rss";
 import MarkdownIt from "markdown-it";
 import sanitizeHtml from "sanitize-html";
+import { BLOG_ENABLED } from "../../lib/blogConfig";
 import { SITE } from "../../lib/site";
 import { getPublishedBlogPosts } from "../../lib/blog";
 
@@ -14,6 +15,10 @@ function renderMarkdownBody(body: string | undefined): string | undefined {
 }
 
 export async function GET(context: { site: URL | undefined }) {
+  if (!BLOG_ENABLED) {
+    return new Response("Not Found", { status: 404 });
+  }
+
   const posts = await getPublishedBlogPosts();
 
   return rss({

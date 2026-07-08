@@ -2,6 +2,7 @@ import { useEffect, type ReactNode } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { StatusData } from "../lib/status";
+import { BLOG_ENABLED } from "../lib/blogConfig";
 import { captureEvent } from "../lib/analytics";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { ThemeDecorations } from "./ThemeDecorations";
@@ -60,18 +61,22 @@ function SiteFooter() {
           his office, or any campaign or party.
         </p>
         <div className="mt-1 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[12.5px] leading-none text-[color:var(--muted)]">
-          <FooterLink
-            href="/blog/"
-            link="blog"
-            icon={
-              <svg viewBox="0 0 16 16" aria-hidden="true" className="size-full fill-blue-900">
-                <path d="M3 2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5.414a1 1 0 0 0-.293-.707L8.293 2.293A1 1 0 0 0 7.586 2H3zm5 0v3h3L8 2zm-2 6H6v1h2V8zm3 0H9v1h2V8zm-3 2H6v1h2v-1zm3 0H9v1h2v-1z" />
-              </svg>
-            }
-          >
-            Blog
-          </FooterLink>
-          <span aria-hidden="true">·</span>
+          {BLOG_ENABLED && (
+            <>
+              <FooterLink
+                href="/blog/"
+                link="blog"
+                icon={
+                  <svg viewBox="0 0 16 16" aria-hidden="true" className="size-full fill-blue-900">
+                    <path d="M3 2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5.414a1 1 0 0 0-.293-.707L8.293 2.293A1 1 0 0 0 7.586 2H3zm5 0v3h3L8 2zm-2 6H6v1h2V8zm3 0H9v1h2V8zm-3 2H6v1h2v-1zm3 0H9v1h2v-1z" />
+                  </svg>
+                }
+              >
+                Blog
+              </FooterLink>
+              <span aria-hidden="true">·</span>
+            </>
+          )}
           <span>Built by</span>
           <FooterLink
             href="https://lindale.tech"

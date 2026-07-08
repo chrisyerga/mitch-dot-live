@@ -1,9 +1,17 @@
 ---
+import { BLOG_ENABLED } from "../../lib/blogConfig";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BlogShell from "../../components/BlogShell.astro";
 import BlogHomeCta from "../../components/BlogHomeCta.astro";
 import { getBlogIndexPosts, formatBlogDate } from "../../lib/blog";
 import { getTagPillStyle } from "../../lib/tagPill";
+
+if (!BLOG_ENABLED) {
+  return new Response(null, {
+    status: 404,
+    statusText: "Not Found",
+  });
+}
 
 const posts = await getBlogIndexPosts();
 ---

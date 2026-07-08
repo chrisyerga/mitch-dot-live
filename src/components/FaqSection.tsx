@@ -1,7 +1,12 @@
 import { faqs } from "../data/faq";
+import { BLOG_ENABLED } from "../lib/blogConfig";
 import { captureEvent } from "../lib/analytics";
 
 function linkifyAnswer(answer: string) {
+  if (!BLOG_ENABLED) {
+    return answer.replace(/\/blog\/[a-z0-9-]+\//g, "how this tracker works");
+  }
+
   const parts = answer.split(/(\/blog\/[a-z0-9-]+\/)/g);
   if (parts.length === 1) return answer;
 

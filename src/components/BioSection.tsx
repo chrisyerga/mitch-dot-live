@@ -1,4 +1,5 @@
 import { bioFacts } from "../data/facts";
+import { BLOG_ENABLED } from "../lib/blogConfig";
 import { SITE } from "../lib/site";
 
 export function BioSection() {
@@ -21,11 +22,16 @@ export function BioSection() {
           <p className="mb-[18px] text-base leading-[1.65] text-[color:var(--fg)]">
             A Republican from Kentucky, he is among the longest-serving members of the U.S.
             Senate and was its longest-serving party leader in history. This page exists to
-            answer one recurring question, plainly and continuously.{" "}
-            <a href="/blog/how-old-is-mitch-mcconnell/" className="text-[color:var(--accent2)] hover:underline">
-              Read more about his age and tenure
-            </a>
-            .
+            answer one recurring question, plainly and continuously.
+            {BLOG_ENABLED && (
+              <>
+                {" "}
+                <a href="/blog/how-old-is-mitch-mcconnell/" className="text-[color:var(--accent2)] hover:underline">
+                  Read more about his age and tenure
+                </a>
+                .
+              </>
+            )}
           </p>
           <div>
             {bioFacts.map((fact) => (
