@@ -93,23 +93,45 @@ const RUMOR_OR_RECOVERY_PATTERNS = [
   /\bscarce\b/i,
 ];
 
-/** Headlines that actually report death, not merely discuss it. */
-const DEATH_REPORT_PATTERNS = [
-  /\b(died|dies)\b/i,
-  /\bhas died\b/i,
-  /\bobituar/i,
-  /\bpassed away\b/i,
-  /\bpasses away\b/i,
-  /\bdeath of\b/i,
-  /\bmourn(s|ing)?\b/i,
-  /\bfuneral\b/i,
+const SUBJECT = String.raw`(?:sen(?:ator|\.)?\s+)?(?:mitch\s+)?mcconnell`;
+
+/**
+ * Death language with McConnell as the subject/decedent.
+ * Name must come before the death verb so headlines like
+ * "Lindsey Graham dies; Mitch McConnell speaks" cannot match.
+ */
+const SUBJECT_DEATH_PATTERNS = [
+  new RegExp(
+    String.raw`\b${SUBJECT}\b.{0,40}\b(?:dies|died|has died|passed away|passes away|is dead|dead at)\b`,
+    "i",
+  ),
+  new RegExp(
+    String.raw`\b(?:death|obituary|passing)\s+of\s+${SUBJECT}\b`,
+    "i",
+  ),
+  new RegExp(String.raw`\bfuneral\s+(?:of|for)\s+${SUBJECT}\b`, "i"),
+  new RegExp(
+    String.raw`\b${SUBJECT}(?:'s|’s)\s+(?:death|obituary|funeral|passing)\b`,
+    "i",
+  ),
+  new RegExp(
+    String.raw`\bobituar(?:y|ies)\b[:\s-].{0,40}\b${SUBJECT}\b`,
+    "i",
+  ),
 ];
 
+/**
+ * True only when the headline reports Mitch McConnell's death — not a
+ * colleague's death, a reaction statement, or a health/rumor update.
+ */
 export function isDeathReportHeadline(title: string): boolean {
   if (RUMOR_OR_RECOVERY_PATTERNS.some((pattern) => pattern.test(title))) {
     return false;
   }
-  return DEATH_REPORT_PATTERNS.some((pattern) => pattern.test(title));
+  if (!/\b(?:mitch\s+)?mcconnell\b/i.test(title)) {
+    return false;
+  }
+  return SUBJECT_DEATH_PATTERNS.some((pattern) => pattern.test(title));
 }
 
 export async function fetchWireHeadlines(
