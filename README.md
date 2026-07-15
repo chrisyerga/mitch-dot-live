@@ -40,6 +40,12 @@ I have also forked the Convex backend and have been exploring how it works. I've
 
 This was also an exercise in SEO and web app analytics, which is why it has Posthog integrated. Astro is an excellent choice for that as well and this repo does its best (as far as my naïve knowledge goes) to optimize not only page load and app responsiveness, but also SEO metas, OpenGraph metadata, etc. I've already ran into a few obvious issues. For example, the initial version of this failed to provide an actual answer to crawlers because the SSR simply said "Loading..." unless Javascript was running on the client. This is now handled in src/pages/index.astro which performs the Convex query at ```npx astro build``` time and bakes ```initialStatus``` into the static Atro/VITE build of the site. For a situation such as this where there is but a single transition from YES->NO that's reasonable. Arguably that could just be set to a const of YES but this approach felt more correct.
 
+**UPDATE** My site received a nuclear "Manual Action" and was wiped from Google search for "excessive spam" which is mystifying. I added 8 total blog posts with keywords,
+not the 1000s that usually triggers this. Perhaps a politically-motivated reviewer didn't like it? Anyhow, the site is off Google Search but still gets >100 users per day.
+This is considerably down from the ~1,000 per day when I had my keyword searches tightened up against the blog content. Good lesson to learn. Google will gladly grab your
+content to put in their AI GEO box but doesn't want you optimizing gateway pages anymore. I did have it hooked up to an AI SEO writer but those were triggered manually and
+never ran more than one at a time. I was a bit too smart for my own good I guess. SEO is a terrible game to be playing these days. I wish those practicioners well...
+
 ### Google Search Ranking
 
 <img src="https://lindale.atl1.cdn.digitaloceanspaces.com/google-search-position.jpg" width="80%">
