@@ -30,6 +30,16 @@ export const statusTimeline = [
     status: "ALIVE",
   },
   {
+    date: "Jun 2026",
+    event: "Hospitalized after a fall and brief loss of consciousness.",
+    status: "ALIVE",
+  },
+  {
+    date: "Sep 2026",
+    event: "Returns to the Senate after a 3 month absence.",
+    status: "ALIVE",
+  },
+  {
     date: "Today",
     event: "Status confirmed against current reporting.",
     status: "LIVE",
